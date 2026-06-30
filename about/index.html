@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About MoneyMath — Free, Private Finance Calculators</title>
+<meta name="description" content="MoneyMath is a free set of finance calculators that run entirely in your browser. Learn who builds them, why they're free, and how your inputs stay private.">
+<link rel="canonical" href="https://moneymath.example/about/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About MoneyMath">
+<meta property="og:description" content="Free, private finance calculators with one audited math engine. Here's who we are and why we built them.">
+<meta property="og:url" content="https://moneymath.example/about/">
+<link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>About MoneyMath</h1>
+    <p class="lede">Clear, free finance calculators that give you a straight answer — without the sign-up walls, pop-ups, or spreadsheets.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>Why we built this</h2>
+    <p>Most people facing a money decision — a mortgage, a car loan, a savings goal — just want one honest number: <em>what will this actually cost, or be worth?</em> Too many calculators bury that answer under email gates, advertising mazes, and confusing inputs. MoneyMath exists to do the opposite: type a few figures, get a clear result instantly, and move on with your day.</p>
+
+    <h2>How it works</h2>
+    <p>Every calculator on this site runs the same way. When you enter your numbers, the math happens right here on your device using a single, shared calculation engine. That engine is unit-tested, so the formula behind the <a href="/mortgage-calculator/">mortgage calculator</a> is the identical, audited code used by the <a href="/loan-calculator/">loan</a>, <a href="/auto-loan-calculator/">auto loan</a>, <a href="/compound-interest-calculator/">compound interest</a>, <a href="/retirement-calculator/">retirement</a>, and <a href="/debt-payoff-calculator/">debt payoff</a> tools. One core, consistently applied, means you can trust the answer regardless of which page you land on.</p>
+
+    <h2>Free, and private by design</h2>
+    <p>MoneyMath is free to use. We keep the lights on with unobtrusive advertising, which is why you'll see the occasional ad slot — not paywalls. Crucially, the figures you enter never leave your browser. We don't have a database of your salary or your loan balance because the calculations never travel to a server in the first place. You can read exactly how we handle cookies and advertising on our <a href="/privacy/">privacy page</a>.</p>
+
+    <h2>An honest disclaimer</h2>
+    <p>We are calculator builders, not your financial adviser. The tools here are designed to be accurate and genuinely useful for planning, but they produce estimates based on the inputs you provide. For decisions that matter, confirm the figures with your lender, bank, or a licensed professional. See our full <a href="/disclaimer/">disclaimer</a> for details.</p>
+
+    <p>Spotted a bug, or have a calculator you'd like us to build? We'd love to hear it — <a href="/contact/">get in touch</a>.</p>
+
+    <p class="note">MoneyMath provides general information only and is not financial advice.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+</body>
+</html>
