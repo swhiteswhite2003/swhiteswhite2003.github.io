@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple Interest Calculator — Interest & Total | MoneyMath</title>
+<meta name="description" content="Free simple interest calculator. Enter principal, annual rate, and time in years to see the interest earned and your final total — using I = P × r × t.">
+<link rel="canonical" href="https://moneymath.example/simple-interest-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Simple Interest Calculator — Interest & Final Amount">
+<meta property="og:description" content="Calculate simple (non-compounding) interest in seconds: principal × rate × time. See interest earned and your final balance. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/simple-interest-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Simple Interest Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/simple-interest-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How is simple interest calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Simple interest uses I = P × r × t, where P is the principal, r is the annual rate as a decimal, and t is the time in years. Your final total is P + I — the original amount plus the interest." } },
+        { "@type": "Question", "name": "What is the difference between simple and compound interest?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Simple interest is charged only on the original principal, so it grows in a straight line. Compound interest is charged on the principal plus any interest already added, so it grows faster over time. For multi-year savings or debt, compound interest is almost always larger." } },
+        { "@type": "Question", "name": "Can I use months instead of years?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Enter the time as a fraction of a year — 6 months is 0.5, 18 months is 1.5, and 90 days is roughly 0.25. The formula multiplies the annual rate by the time, so a partial year gives a proportional amount of interest." } },
+        { "@type": "Question", "name": "Where is simple interest actually used?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Many short-term and fixed loans use simple interest: auto loans, some personal and car-title loans, short bridge loans, and bonds or notes that pay a fixed coupon. It is common any time interest does not get added back to the balance." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Simple Interest Calculator</h1>
+    <p class="lede">Work out simple (non-compounding) interest in seconds. Enter a principal, an annual rate, and a time in years to see exactly how much interest you earn or owe and your final total.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="Simple interest calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="principal">Principal amount</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="principal" value="10000" min="0" step="100" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="rate">Annual interest rate</label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="rate" value="5" min="0" step="0.1" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="years">Time <span class="hint">in years</span></label>
+        <input type="number" id="years" value="3" min="0" step="0.5" inputmode="decimal">
+        <span class="hint" id="yearshint"></span>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Total interest</div>
+      <div class="big" id="interest">$0</div>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Principal</div><div class="v" id="principalOut">$0</div></div>
+        <div class="stat"><div class="k">Interest earned</div><div class="v" id="interestOut">$0</div></div>
+        <div class="stat"><div class="k">Final total amount</div><div class="v" id="total">$0</div></div>
+        <div class="stat"><div class="k">Interest per year</div><div class="v" id="perYear">$0</div></div>
+      </div>
+      <p class="hint" id="msg"></p>
+    </div>
+
+    <details>
+      <summary>Show year-by-year breakdown</summary>
+      <div class="table-wrap">
+        <table id="sched">
+          <thead><tr><th>Year</th><th>Interest this year</th><th>Cumulative interest</th><th>Balance</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this simple interest calculator works</h2>
+    <p>Simple interest is the most straightforward way to charge or earn interest. It is calculated only on the original <strong>principal</strong> — never on interest that has already accrued — using the formula:</p>
+    <p><code>I = P · r · t</code></p>
+    <p>where <strong>I</strong> is the interest, <strong>P</strong> is the principal you start with, <strong>r</strong> is the annual interest rate written as a decimal (so 5% becomes 0.05), and <strong>t</strong> is the time in years. Your <strong>final total</strong> is simply <code>P + I</code>. Because the rate always applies to the same starting amount, the interest you earn is the same every year and the balance grows in a perfectly straight line.</p>
+
+    <h2>Simple interest vs. compound interest</h2>
+    <p>The key difference is what the interest is calculated on. With <strong>simple interest</strong>, every year you earn the same amount because it is always <code>P · r</code>. With <strong>compound interest</strong>, each period's interest is added to the balance, so the next period earns interest on a bigger number — your money snowballs.</p>
+    <p>Over one year the two are identical. Over many years the gap widens fast: at 5% on $10,000, simple interest pays a flat $500 a year, while compounding pays a little more each year as the balance climbs. If you are saving or investing for the long term, compounding works in your favour — see the difference on our <a href="/compound-interest-calculator/">compound interest calculator</a>.</p>
+
+    <h3>When you will run into simple interest</h3>
+    <ul>
+      <li><strong>Short-term and fixed loans.</strong> Many auto loans, personal loans, and car-title loans quote simple interest on the principal.</li>
+      <li><strong>Bonds and notes.</strong> A fixed coupon paid on the face value is simple interest — the interest does not get reinvested into the bond itself.</li>
+      <li><strong>Quick estimates.</strong> Simple interest is a fast, conservative way to ballpark the cost of borrowing or the return on a short deposit before reaching for a compounding model.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How is simple interest calculated?</summary>
+      <p>Simple interest uses <code>I = P · r · t</code>, where P is the principal, r is the annual rate as a decimal, and t is the time in years. Your final total is <code>P + I</code> — the original amount plus the interest.</p></details>
+    <details><summary>What is the difference between simple and compound interest?</summary>
+      <p>Simple interest is charged only on the original principal, so it grows in a straight line. Compound interest is charged on the principal plus any interest already added, so it grows faster over time. For multi-year savings or debt, compound interest is almost always larger — compare on the <a href="/compound-interest-calculator/">compound interest calculator</a>.</p></details>
+    <details><summary>Can I use months instead of years?</summary>
+      <p>Yes. Enter the time as a fraction of a year — 6 months is 0.5, 18 months is 1.5, and 90 days is roughly 0.25. The formula multiplies the annual rate by the time, so a partial year gives a proportional amount of interest.</p></details>
+    <details><summary>Where is simple interest actually used?</summary>
+      <p>Many short-term and fixed loans use simple interest: auto loans, some personal and car-title loans, short bridge loans, and bonds or notes that pay a fixed coupon. It is common any time interest does not get added back to the balance.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Some products that look like simple interest actually compound or add fees — always confirm the exact terms with your lender or institution.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["principal", "rate", "years"];
+  function compute() {
+    var principal = MM.val("principal"), rate = MM.val("rate"), years = MM.val("years");
+    if (!isFinite(principal) || principal < 0) principal = 0;
+    if (!isFinite(rate)) rate = 0;
+    if (!isFinite(years) || years < 0) years = 0;
+
+    var r = MM.simpleInterest(principal, rate, years);
+    var perYear = principal * (rate / 100);
+
+    document.getElementById("interest").textContent = MM.fmtCurrency(r.interest);
+    document.getElementById("principalOut").textContent = MM.fmtCurrency(principal, { cents: false });
+    document.getElementById("interestOut").textContent = MM.fmtCurrency(r.interest);
+    document.getElementById("total").textContent = MM.fmtCurrency(r.total);
+    document.getElementById("perYear").textContent = MM.fmtCurrency(perYear);
+
+    var msg = document.getElementById("msg");
+    if (principal <= 0) {
+      msg.textContent = "Enter a principal amount above to see the interest.";
+    } else if (years <= 0) {
+      msg.textContent = "Enter a time in years to see how much interest builds up.";
+    } else if (rate <= 0) {
+      msg.textContent = "At a 0% rate no interest accrues — the total equals your principal.";
+    } else {
+      msg.textContent = "Over " + MM.fmtNum(years, 2) + " year" + (years === 1 ? "" : "s") +
+        " at " + MM.fmtNum(rate, 2) + "%, this principal earns " + MM.fmtCurrency(r.interest) + " in simple interest.";
+    }
+
+    var tb = document.querySelector("#sched tbody");
+    tb.innerHTML = "";
+    if (principal > 0 && perYear > 0 && years > 0) {
+      var fullYears = Math.floor(years);
+      var cumulative = 0;
+      for (var y = 1; y <= fullYears; y++) {
+        cumulative += perYear;
+        addRow(tb, y, perYear, cumulative, principal + cumulative);
+      }
+      var frac = years - fullYears;
+      if (frac > 1e-9) {
+        var partial = perYear * frac;
+        cumulative += partial;
+        addRow(tb, MM.fmtNum(years, 2), partial, cumulative, principal + cumulative);
+      }
+    }
+  }
+  function addRow(tb, year, interestThisYear, cumulative, balance) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + year + "</td><td>" + MM.fmtCurrency(interestThisYear) +
+      "</td><td>" + MM.fmtCurrency(cumulative) +
+      "</td><td>" + MM.fmtCurrency(balance, { cents: false }) + "</td>";
+    tb.appendChild(tr);
+  }
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>

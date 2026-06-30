@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>401(k) Calculator — Retirement Balance & Match | MoneyMath</title>
+<meta name="description" content="Free 401(k) calculator with employer match. Project your retirement balance from salary, contribution rate, employer match, and expected annual return.">
+<link rel="canonical" href="https://moneymath.example/401k-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="401(k) Calculator — Retirement Balance & Employer Match">
+<meta property="og:description" content="See how big your 401(k) could grow by retirement, including free employer matching contributions. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/401k-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "401(k) Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/401k-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How does 401(k) employer matching work?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Many employers match part of what you put in — for example, 50% of your contributions up to 6% of your pay. This calculator multiplies your salary by the lower of your contribution rate and the match limit, then by the match rate, to find the employer's monthly contribution. It is added to your own savings before growth is applied." } },
+        { "@type": "Question", "name": "What is a good 401(k) contribution percentage?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A common starting point is to contribute at least enough to capture the full employer match — leaving it on the table is turning down free money. Many savers then aim for 10% to 15% of pay including the match. Raise your rate above the match limit field and watch the projected balance climb." } },
+        { "@type": "Question", "name": "How much will my 401(k) be worth at retirement?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It depends on your starting balance, how much you and your employer add each month, your expected annual return, and how many years are left until retirement. Enter those values and the calculator compounds them monthly using FV = P(1+i)^N + PMT·((1+i)^N − 1)/i to project your balance." } },
+        { "@type": "Question", "name": "Does this 401(k) calculator account for taxes and inflation?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. To keep the projection simple it ignores salary raises, inflation, investment fees, and the taxes you will eventually owe on traditional 401(k) withdrawals. The result is a pre-tax balance assuming a steady contribution and return. Note that the IRS also caps how much you can defer each year, so very high contribution rates may not be allowed in practice — check the current year's limit." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>401(k) Calculator</h1>
+    <p class="lede">Use this 401k calculator to project your 401(k) balance at retirement, including your employer's matching contributions. Enter your salary, contribution rate, match, and expected return to see how your nest egg could grow.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="401(k) retirement calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="age">Current age</label>
+        <input type="number" id="age" value="30" min="0" max="100" step="1" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="retire">Retirement age</label>
+        <input type="number" id="retire" value="65" min="0" max="100" step="1" inputmode="numeric">
+        <span class="hint" id="yearshint"></span>
+      </div>
+      <div class="field">
+        <label for="balance">Current 401(k) balance</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="balance" value="25000" min="0" step="1000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="salary">Annual salary</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="salary" value="70000" min="0" step="1000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="contrib">Your contribution <span class="hint">(% of salary)</span></label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="contrib" value="10" min="0" max="100" step="0.5" inputmode="decimal"></div>
+        <span class="hint" id="contribhint"></span>
+      </div>
+      <div class="field">
+        <label for="matchrate">Employer match rate <span class="hint">(e.g. 50 = 50¢ per $1)</span></label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="matchrate" value="50" min="0" max="200" step="5" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="matchlimit">Match limit <span class="hint">(% of salary)</span></label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="matchlimit" value="6" min="0" max="100" step="0.5" inputmode="decimal"></div>
+        <span class="hint" id="matchhint"></span>
+      </div>
+      <div class="field">
+        <label for="ret">Expected annual return</label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="ret" value="7" min="0" max="50" step="0.25" inputmode="decimal"></div>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Projected balance at retirement</div>
+      <div class="big" id="projected">$0</div>
+      <p class="hint" id="msg"></p>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Starting balance</div><div class="v" id="startbal">$0</div></div>
+        <div class="stat"><div class="k">Your contributions</div><div class="v" id="youramt">$0</div></div>
+        <div class="stat"><div class="k">Employer match total</div><div class="v" id="employer">$0</div></div>
+        <div class="stat"><div class="k">Investment growth</div><div class="v" id="growth">$0</div></div>
+        <div class="stat"><div class="k">Total contributed</div><div class="v" id="contributed">$0</div></div>
+        <div class="stat"><div class="k">Years until retirement</div><div class="v" id="yearsinv">—</div></div>
+      </div>
+    </div>
+
+    <details>
+      <summary>Show year-by-year growth</summary>
+      <div class="table-wrap">
+        <table id="sched">
+          <thead><tr><th>Year</th><th>Age</th><th>Balance</th><th>Growth that year</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this 401(k) calculator works</h2>
+    <p>Each month you set aside a slice of your salary, and many employers add a match on top. This 401k calculator turns those inputs into a single monthly contribution and grows it with monthly compounding until your retirement age.</p>
+    <p>Your own contribution is <code>salary × your % ÷ 12</code>. The employer match is <code>salary × min(your %, match limit) ÷ 12 × match rate</code> — the employer only matches up to its limit, so contributing 10% when the limit is 6% still only earns a match on the first 6%. Both streams are added together and compounded:</p>
+    <p><code>FV = P(1 + i)<sup>N</sup> + PMT · ((1 + i)<sup>N</sup> − 1) / i</code></p>
+    <p>where <strong>P</strong> is your current balance, <strong>PMT</strong> is the combined monthly contribution, <strong>i</strong> is your expected annual return ÷ 12, and <strong>N</strong> is the number of months until retirement (years × 12). Investment growth is simply the projected balance minus everything that was actually paid in.</p>
+
+    <h2>Why the employer match is free money</h2>
+    <p>A 50% match up to 6% of pay means that for every dollar you contribute (up to 6% of your salary) your employer hands you another 50 cents — an instant 50% return before the market does anything. If your contribution rate is below the match limit, you are leaving guaranteed money on the table. The fastest, lowest-risk improvement most people can make is to bump their contribution up to at least the full match.</p>
+
+    <h3>Three ways to grow your 401(k) faster</h3>
+    <ul>
+      <li><strong>Capture the full match first.</strong> Contribute at least up to the match limit before doing anything else — it is the highest-return dollar in your plan.</li>
+      <li><strong>Start early and let time work.</strong> Because growth compounds, the first dollars you invest do the heaviest lifting. Try moving your current age down a few years to see the effect.</li>
+      <li><strong>Raise your rate gradually.</strong> Even a one- or two-point bump in your contribution percentage can add a large sum over decades — adjust the field above and watch the projected balance respond.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How does 401(k) employer matching work?</summary>
+      <p>Many employers match part of what you put in — for example, 50% of your contributions up to 6% of your pay. This calculator multiplies your salary by the lower of your contribution rate and the match limit, then by the match rate, to find the employer's monthly contribution. It is added to your own savings before growth is applied.</p></details>
+    <details><summary>What is a good 401(k) contribution percentage?</summary>
+      <p>A common starting point is to contribute at least enough to capture the full employer match — leaving it on the table is turning down free money. Many savers then aim for 10% to 15% of pay including the match. Raise your rate above the match limit field and watch the projected balance climb.</p></details>
+    <details><summary>How much will my 401(k) be worth at retirement?</summary>
+      <p>It depends on your starting balance, how much you and your employer add each month, your expected annual return, and how many years are left until retirement. Enter those values and the calculator compounds them monthly using <code>FV = P(1+i)<sup>N</sup> + PMT·((1+i)<sup>N</sup> − 1)/i</code> to project your balance.</p></details>
+    <details><summary>Does this 401(k) calculator account for taxes and inflation?</summary>
+      <p>No. To keep the projection simple it ignores salary raises, inflation, investment fees, and the taxes you will eventually owe on traditional 401(k) withdrawals. The result is a pre-tax balance assuming a steady contribution and return. Note that the IRS also caps how much you can defer each year, so very high contribution rates may not be allowed in practice — check the current year's limit.</p></details>
+    <details><summary>Is this 401(k) calculator free?</summary>
+      <p>Completely free, no sign-up, and your numbers never leave your browser — all the math runs on your device.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Projections assume a constant contribution and return and ignore raises, inflation, fees, and taxes. Your actual results will vary — confirm your plan's match formula and limits with your employer or plan administrator.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["age","retire","balance","salary","contrib","matchrate","matchlimit","ret"];
+  function set(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
+
+  function compute() {
+    var age = MM.val("age"), retire = MM.val("retire"), balance = MM.val("balance"),
+        salary = MM.val("salary"), contribPct = MM.val("contrib"), matchRate = MM.val("matchrate"),
+        matchLimit = MM.val("matchlimit"), ret = MM.val("ret");
+    if (!isFinite(age)) age = 0;
+    if (!isFinite(retire)) retire = 0;
+    if (!isFinite(balance)) balance = 0;
+    if (!isFinite(salary)) salary = 0;
+    if (!isFinite(contribPct)) contribPct = 0;
+    if (!isFinite(matchRate)) matchRate = 0;
+    if (!isFinite(matchLimit)) matchLimit = 0;
+    if (!isFinite(ret)) ret = 0;
+
+    var years = Math.max(0, retire - age);
+    var employeeMonthly = salary * contribPct / 100 / 12;
+    var matchedPct = Math.min(contribPct, matchLimit);
+    var employerMonthly = salary * matchedPct / 100 * (matchRate / 100) / 12;
+    var totalMonthly = employeeMonthly + employerMonthly;
+
+    var res = MM.compound(balance, totalMonthly, ret, years, { periodsPerYear: 12 });
+
+    var employeeTotal = employeeMonthly * 12 * years;
+    var employerTotal = employerMonthly * 12 * years;
+    var contributed = balance + employeeTotal + employerTotal;
+
+    set("projected", MM.fmtCurrency(res.futureValue, { cents: false }));
+    set("startbal", MM.fmtCurrency(balance, { cents: false }));
+    set("youramt", MM.fmtCurrency(employeeTotal, { cents: false }));
+    set("employer", MM.fmtCurrency(employerTotal, { cents: false }));
+    set("growth", MM.fmtCurrency(res.totalInterest, { cents: false }));
+    set("contributed", MM.fmtCurrency(contributed, { cents: false }));
+    set("yearsinv", years > 0 ? (years + (years === 1 ? " year" : " years")) : "—");
+
+    set("yearshint", years > 0 ? (years + " yrs of growth") : "set age below retirement");
+    set("contribhint", (salary > 0 && employeeMonthly > 0)
+      ? (MM.fmtCurrency(employeeMonthly, { cents: false }) + "/mo · " + MM.fmtCurrency(employeeMonthly * 12, { cents: false }) + "/yr")
+      : "");
+    set("matchhint", employerMonthly > 0
+      ? (MM.fmtCurrency(employerMonthly * 12, { cents: false }) + "/yr in free match")
+      : "");
+
+    var msg = document.getElementById("msg");
+    if (msg) {
+      if (years <= 0) {
+        msg.textContent = "Set a retirement age greater than your current age to project your balance.";
+      } else if (salary <= 0) {
+        msg.textContent = "Enter your annual salary to estimate your contributions and employer match.";
+      } else if (contribPct > 0 && matchLimit > 0 && contribPct < matchLimit) {
+        msg.textContent = "You're contributing below the match limit — raising to " + MM.fmtNum(matchLimit, matchLimit % 1 ? 1 : 0) + "% of pay would capture more free employer money.";
+      } else if (contribPct <= 0) {
+        msg.textContent = "You're not contributing yet — even a small percentage, plus the employer match, compounds over time.";
+      } else {
+        msg.textContent = "";
+      }
+    }
+
+    var tb = document.querySelector("#sched tbody");
+    tb.innerHTML = "";
+    res.yearly.forEach(function (row) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + row.year + "</td><td>" + (age + row.year) + "</td><td>" +
+        MM.fmtCurrency(row.balance, { cents: false }) + "</td><td>" +
+        MM.fmtCurrency(row.interestThisYear, { cents: false }) + "</td>";
+      tb.appendChild(tr);
+    });
+  }
+
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>

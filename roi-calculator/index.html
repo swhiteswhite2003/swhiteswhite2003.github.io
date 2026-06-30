@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROI Calculator — Return on Investment &amp; CAGR | MoneyMath</title>
+<meta name="description" content="Free ROI calculator. Enter how much you invested and what it's worth now to see your total return %, net gain or loss, and annualized return (CAGR).">
+<link rel="canonical" href="https://moneymath.example/roi-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ROI Calculator — Return on Investment & Annualized Return">
+<meta property="og:description" content="Work out your return on investment in seconds: total return %, net gain or loss in dollars, and annualized (CAGR) return. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/roi-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "ROI Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/roi-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do you calculate return on investment (ROI)?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Total return is (final value − amount invested) ÷ amount invested, expressed as a percent. For example, turning $10,000 into $16,000 is a $6,000 gain, or a 60% total return." } },
+        { "@type": "Question", "name": "What is the difference between total return and annualized return (CAGR)?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Total return is the whole gain over the entire holding period, ignoring how long it took. Annualized return, or CAGR, is the constant yearly rate that would compound your starting amount up to the final value: CAGR = (final ÷ initial)^(1 ÷ years) − 1. A 60% total return over 5 years is only about 9.9% per year." } },
+        { "@type": "Question", "name": "Does this ROI calculator include fees, taxes, or inflation?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. It compares the cash you put in to the value you have now, so any fees or commissions you paid are only reflected if you fold them into the amount invested or net them out of the final value. Returns are nominal — they are not adjusted for tax or inflation." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>ROI Calculator</h1>
+    <p class="lede">Find your return on investment in seconds. Enter what you put in and what it's worth now to see your total return, net gain or loss, and — if you add a holding period — your annualized return (CAGR).</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="ROI calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="initial">Amount invested</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="initial" value="10000" min="0" step="100" inputmode="decimal"></div>
+        <span class="hint">What you originally put in (include fees if you can)</span>
+      </div>
+      <div class="field">
+        <label for="final">Final / current value</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="final" value="16000" min="0" step="100" inputmode="decimal"></div>
+        <span class="hint">What it's worth now, or what you sold it for</span>
+      </div>
+      <div class="field">
+        <label for="years">Holding period <span class="hint">years (optional)</span></label>
+        <div class="input-wrap has-post"><span class="affix post">yrs</span>
+          <input type="number" id="years" value="5" min="0" step="0.5" inputmode="decimal"></div>
+        <span class="hint">Leave blank or 0 to skip the annualized (CAGR) figure</span>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Total return</div>
+      <div class="big" id="totalReturn">0%</div>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Net gain / loss</div><div class="v" id="gain">$0</div></div>
+        <div class="stat"><div class="k">Annualized return (CAGR)</div><div class="v" id="annualized">n/a</div></div>
+        <div class="stat"><div class="k">Growth multiple</div><div class="v" id="multiple">—</div></div>
+        <div class="stat"><div class="k">Holding period</div><div class="v" id="periodOut">—</div></div>
+      </div>
+      <p class="hint" id="msg"></p>
+    </div>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this ROI calculator works</h2>
+    <p>Return on investment compares the money you got back to the money you put in. The headline figure is your <strong>total return</strong>:</p>
+    <p><code>ROI = (final value − amount invested) / amount invested × 100</code></p>
+    <p>So if you invested <strong>$10,000</strong> and it's now worth <strong>$16,000</strong>, your net gain is <strong>$6,000</strong> and your total return is <strong>60%</strong>. That single number is great for comparing one-off results, but it says nothing about <em>how long</em> the money was working.</p>
+
+    <h2>Total return vs. annualized return (CAGR)</h2>
+    <p>To compare investments that ran for different lengths of time, you need the <strong>annualized return</strong>, also called the compound annual growth rate (CAGR). It is the steady yearly rate that would grow your starting amount up to the final value:</p>
+    <p><code>CAGR = (final value / amount invested)<sup>(1 / years)</sup> − 1</code></p>
+    <p>That same 60% total return looks very different depending on the holding period: over <strong>1 year</strong> it's a 60% annual return, but spread over <strong>5 years</strong> it's only about <strong>9.9% per year</strong>. Enter a holding period above and the calculator fills in the annualized figure automatically; leave it blank and it simply shows the total return.</p>
+
+    <h3>Getting an accurate ROI</h3>
+    <ul>
+      <li><strong>Count every dollar in.</strong> Add purchase commissions, fees, or improvement costs to the amount invested so your return isn't flattered.</li>
+      <li><strong>Use net proceeds out.</strong> For a sale, the final value should be what you actually received after selling costs.</li>
+      <li><strong>Returns are nominal.</strong> This tool doesn't adjust for tax or inflation — a 9.9% return during 4% inflation is closer to 5.7% in real, spending-power terms.</li>
+      <li><strong>CAGR hides the bumps.</strong> A smooth annualized rate doesn't mean the investment grew evenly each year — it can mask large swings along the way.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How do you calculate return on investment (ROI)?</summary>
+      <p>Total return is <code>(final value − amount invested) ÷ amount invested</code>, expressed as a percent. For example, turning $10,000 into $16,000 is a $6,000 gain, or a 60% total return.</p></details>
+    <details><summary>What is the difference between total return and annualized return (CAGR)?</summary>
+      <p>Total return is the whole gain over the entire holding period, ignoring how long it took. Annualized return, or CAGR, is the constant yearly rate that would compound your starting amount up to the final value: <code>CAGR = (final ÷ initial)<sup>(1 ÷ years)</sup> − 1</code>. A 60% total return over 5 years is only about 9.9% per year.</p></details>
+    <details><summary>Does this ROI calculator include fees, taxes, or inflation?</summary>
+      <p>No. It compares the cash you put in to the value you have now, so any fees or commissions you paid are only reflected if you fold them into the amount invested or net them out of the final value. Returns are nominal — they are not adjusted for tax or inflation.</p></details>
+    <details><summary>Is this calculator free?</summary>
+      <p>Completely free, no sign-up, and your numbers never leave your browser — all the math runs on your device.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Past returns do not predict future results. Confirm figures with a qualified professional before making investment decisions.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["initial", "final", "years"];
+  function compute() {
+    var initial = MM.val("initial"), finalValue = MM.val("final"), years = MM.val("years");
+    if (!isFinite(initial)) initial = 0;
+    if (!isFinite(finalValue)) finalValue = 0;
+    var hasYears = isFinite(years) && years > 0;
+    var yearsArg = hasYears ? years : 0;
+
+    var r = MM.roi(initial, finalValue, yearsArg);
+
+    var trEl = document.getElementById("totalReturn");
+    var gainEl = document.getElementById("gain");
+    var annEl = document.getElementById("annualized");
+    var multEl = document.getElementById("multiple");
+    var periodEl = document.getElementById("periodOut");
+    var msgEl = document.getElementById("msg");
+
+    var periodText = hasYears
+      ? (MM.fmtNum(years) + (years === 1 ? " year" : " years"))
+      : "Not set";
+    periodEl.textContent = periodText;
+
+    if (initial <= 0) {
+      trEl.textContent = "—";
+      gainEl.textContent = "—";
+      annEl.textContent = "—";
+      multEl.textContent = "—";
+      msgEl.textContent = "Enter the amount you originally invested (greater than $0) to calculate your return.";
+      return;
+    }
+
+    msgEl.textContent = "";
+    trEl.textContent = MM.fmtPct(r.totalReturnPct, 2);
+    gainEl.textContent = MM.fmtCurrency(r.gain, { cents: false });
+    annEl.textContent = hasYears ? MM.fmtPct(r.annualizedPct, 2) : "n/a";
+
+    var mult = finalValue / initial;
+    multEl.textContent = isFinite(mult) ? (MM.fmtNum(mult, 2) + "×") : "—";
+  }
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>

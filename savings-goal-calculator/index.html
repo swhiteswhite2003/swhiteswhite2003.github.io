@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savings Goal Calculator — How Much to Save | MoneyMath</title>
+<meta name="description" content="Free savings goal calculator. Enter your target, what you've saved, your timeline and expected return to see exactly how much to save per month to hit it.">
+<link rel="canonical" href="https://moneymath.example/savings-goal-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Savings Goal Calculator — How Much to Save Per Month">
+<meta property="og:description" content="Find the exact monthly amount you need to save to reach any goal by your target date — with compound growth factored in. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/savings-goal-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Savings Goal Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/savings-goal-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How much should I save each month to reach my goal?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Enter your target amount, what you've already saved, how many years you have, and the annual return you expect. The calculator solves for the level monthly deposit that — combined with compound growth — grows your starting balance to exactly your target by the end date." } },
+        { "@type": "Question", "name": "Does this account for investment growth and interest?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Both your starting balance and every monthly deposit earn the expected annual return, compounded monthly. That's why the total you contribute is usually less than your goal — the projected growth line shows how much the returns add on top." } },
+        { "@type": "Question", "name": "What return rate should I assume?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Use 0% for a plain savings account or cash goal so you only count your own deposits. For a diversified long-term investment, many people model 4–7% as a conservative real-world estimate. Lower the rate to be cautious — a smaller assumed return means a larger required monthly deposit." } },
+        { "@type": "Question", "name": "What happens if I'm already on track?",
+          "acceptedAnswer": { "@type": "Answer", "text": "If your current savings, growing at the return you entered, are projected to reach the goal on their own, the required monthly contribution comes back at $0 and the calculator confirms you're already on track — no new deposits needed." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Savings Goal Calculator</h1>
+    <p class="lede">Work out exactly how much to save per month to hit a target by your deadline. Enter your goal, what you've already put aside, your timeline, and the return you expect — compound growth is built in.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="Savings goal calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="target">Savings goal (target amount)</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="target" value="50000" min="0" step="1000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="saved">Amount already saved</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="saved" value="5000" min="0" step="500" inputmode="decimal"></div>
+        <span class="hint" id="savedpct"></span>
+      </div>
+      <div class="field">
+        <label for="years">Years to reach it</label>
+        <div class="input-wrap has-post"><span class="affix post">yrs</span>
+          <input type="number" id="years" value="10" min="0" step="1" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="rate">Expected annual return <span class="hint">(0% for cash savings)</span></label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="rate" value="6" min="0" step="0.1" inputmode="decimal"></div>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline" id="headline">Save this much per month</div>
+      <div class="big" id="monthly">$0</div>
+      <p class="hint" id="msg"></p>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Savings goal</div><div class="v" id="targetOut">$0</div></div>
+        <div class="stat"><div class="k">Already saved</div><div class="v" id="savedOut">$0</div></div>
+        <div class="stat"><div class="k">Total you'll contribute</div><div class="v" id="contribOut">$0</div></div>
+        <div class="stat"><div class="k">Projected growth (interest)</div><div class="v" id="growthOut">$0</div></div>
+        <div class="stat"><div class="k">Saving period</div><div class="v" id="periodOut">—</div></div>
+        <div class="stat"><div class="k">Number of deposits</div><div class="v" id="depositsOut">—</div></div>
+      </div>
+    </div>
+
+    <details>
+      <summary>Show year-by-year projection</summary>
+      <div class="table-wrap">
+        <table id="sched">
+          <thead><tr><th>Year</th><th>Deposits</th><th>Interest earned</th><th>Balance</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this savings goal calculator works</h2>
+    <p>This <strong>savings goal calculator</strong> answers one question: <strong>how much do I need to save per month</strong> to reach a target by a set date? Instead of guessing, it solves the future-value-of-an-annuity formula <em>backwards</em> for the deposit:</p>
+    <p><code>PMT = (FV − P(1 + i)<sup>n</sup>) · i / ((1 + i)<sup>n</sup> − 1)</code></p>
+    <p>where <strong>FV</strong> is your savings goal, <strong>P</strong> is the amount already saved, <strong>i</strong> is the monthly return (your annual rate ÷ 12), and <strong>n</strong> is the number of months (years × 12). Your starting balance and every deposit compound each month, so the calculator finds the level monthly amount that grows everything you have to <em>exactly</em> your target on the deadline.</p>
+
+    <h2>Why compound growth shrinks the amount you need</h2>
+    <p>The bigger your expected return and the longer your timeline, the more the market does the heavy lifting — and the less you have to deposit yourself. The <strong>Projected growth (interest)</strong> figure in the result is the gap between your goal and what you actually contribute. On a long horizon that gap can easily be a third or more of the goal, which is exactly why starting early matters so much.</p>
+
+    <h3>Three ways to lower your required monthly saving</h3>
+    <ul>
+      <li><strong>Give yourself more time.</strong> Adding a few years spreads the goal over more deposits and lets returns compound longer, dropping the monthly figure sharply.</li>
+      <li><strong>Seed it with a lump sum.</strong> Anything you enter under "already saved" grows on its own — raising it cuts the monthly amount more than you'd expect.</li>
+      <li><strong>Earn a higher return.</strong> Moving a long-term goal from a 0% cash account to an invested return reduces what you personally need to set aside (at the cost of more risk).</li>
+    </ul>
+
+    <h3>Set a realistic return</h3>
+    <p>For a short-term, can't-lose-it goal — a house deposit in two years, an emergency fund — use <strong>0%</strong> and count only your own deposits. For a long-term, invested goal, a conservative figure keeps the plan honest: assume too high a return and you'll under-save and miss the target. When in doubt, lower the rate and let any extra growth be a pleasant surprise.</p>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How much should I save each month to reach my goal?</summary>
+      <p>Enter your target amount, what you've already saved, how many years you have, and the annual return you expect. The calculator solves for the level monthly deposit that — combined with compound growth — grows your starting balance to exactly your target by the end date.</p></details>
+    <details><summary>Does this account for investment growth and interest?</summary>
+      <p>Yes. Both your starting balance and every monthly deposit earn the expected annual return, compounded monthly. That's why the total you contribute is usually less than your goal — the projected growth line shows how much the returns add on top.</p></details>
+    <details><summary>What return rate should I assume?</summary>
+      <p>Use 0% for a plain savings account or cash goal so you only count your own deposits. For a diversified long-term investment, many people model 4–7% as a conservative real-world estimate. Lower the rate to be cautious — a smaller assumed return means a larger required monthly deposit.</p></details>
+    <details><summary>What happens if I'm already on track?</summary>
+      <p>If your current savings, growing at the return you entered, are projected to reach the goal on their own, the required monthly contribution comes back at $0 and the calculator confirms you're already on track — no new deposits needed.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Projections assume a constant return that real savings and investments will not match exactly. Confirm your plan with a qualified financial professional.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["target", "saved", "years", "rate"];
+
+  function setStats(target, saved, contrib, growth, period, deposits) {
+    document.getElementById("targetOut").textContent = target;
+    document.getElementById("savedOut").textContent = saved;
+    document.getElementById("contribOut").textContent = contrib;
+    document.getElementById("growthOut").textContent = growth;
+    document.getElementById("periodOut").textContent = period;
+    document.getElementById("depositsOut").textContent = deposits;
+  }
+
+  function clearSchedule() {
+    var tb = document.querySelector("#sched tbody");
+    if (tb) tb.innerHTML = "";
+  }
+
+  function compute() {
+    var target = MM.val("target"), saved = MM.val("saved"),
+        years = MM.val("years"), rate = MM.val("rate");
+    if (!isFinite(target) || target < 0) target = 0;
+    if (!isFinite(saved) || saved < 0) saved = 0;
+    if (!isFinite(years) || years < 0) years = 0;
+    if (!isFinite(rate) || rate < 0) rate = 0;
+
+    var headlineEl = document.getElementById("headline");
+    var monthlyEl = document.getElementById("monthly");
+    var msgEl = document.getElementById("msg");
+
+    // % of goal already saved (hint under the "already saved" field)
+    var pct = target > 0 ? (saved / target * 100) : 0;
+    document.getElementById("savedpct").textContent =
+      (target > 0 && saved > 0) ? (MM.fmtNum(pct, pct >= 10 ? 0 : 1) + "% of your goal already saved") : "";
+
+    // ---- friendly guards (never show NaN / Infinity) ----
+    if (target <= 0) {
+      headlineEl.textContent = "Save this much per month";
+      monthlyEl.textContent = "—";
+      msgEl.textContent = "Enter a savings goal above to see how much to set aside each month.";
+      setStats("—", "—", "—", "—", "—", "—");
+      clearSchedule();
+      return;
+    }
+    if (years <= 0) {
+      headlineEl.textContent = "Save this much per month";
+      monthlyEl.textContent = "—";
+      msgEl.textContent = "Add at least one year to your timeline to see a monthly amount.";
+      setStats(MM.fmtCurrency(target, { cents: false }), MM.fmtCurrency(saved, { cents: false }),
+               "—", "—", "—", "—");
+      clearSchedule();
+      return;
+    }
+
+    var res = MM.solveContribution(target, saved, rate, years, { periodsPerYear: 12 });
+    var monthly = res.contribution;
+    var N = res.periods;
+
+    var periodLabel = MM.fmtNum(years, years % 1 === 0 ? 0 : 1) + (years === 1 ? " year" : " years");
+
+    // ---- already on track: required contribution is ~0 ----
+    if (!isFinite(monthly) || monthly < 0.005) {
+      headlineEl.textContent = "You're already on track 🎉";
+      monthlyEl.textContent = MM.fmtCurrency(0);
+      msgEl.textContent = "Your current savings" +
+        (rate > 0 ? ", growing at " + MM.fmtPct(rate, rate % 1 === 0 ? 0 : 2) + " a year," : "") +
+        " are projected to reach your goal by then with no new monthly deposits.";
+      var growthOnTrack = Math.max(0, target - saved);
+      setStats(MM.fmtCurrency(target, { cents: false }), MM.fmtCurrency(saved, { cents: false }),
+               MM.fmtCurrency(0, { cents: false }), MM.fmtCurrency(growthOnTrack, { cents: false }),
+               periodLabel, "0");
+      // still show the projected glide path of the existing balance
+      renderSchedule(saved, 0, rate, years, N);
+      return;
+    }
+
+    // ---- normal case ----
+    headlineEl.textContent = "Save this much per month";
+    monthlyEl.textContent = MM.fmtCurrency(monthly);
+    msgEl.textContent = "";
+
+    var totalContrib = monthly * N;
+    var growth = target - totalContrib - saved;
+    if (growth < 0) growth = 0;
+
+    setStats(
+      MM.fmtCurrency(target, { cents: false }),
+      MM.fmtCurrency(saved, { cents: false }),
+      MM.fmtCurrency(totalContrib, { cents: false }),
+      MM.fmtCurrency(growth, { cents: false }),
+      periodLabel,
+      MM.fmtNum(N, 0)
+    );
+
+    renderSchedule(saved, monthly, rate, years, N);
+  }
+
+  function renderSchedule(startBalance, monthly, rate, years, N) {
+    var proj = MM.compound(startBalance, monthly, rate, years, { periodsPerYear: 12 });
+    var tb = document.querySelector("#sched tbody");
+    tb.innerHTML = "";
+    proj.yearly.forEach(function (row, idx) {
+      var periodsThisYear = Math.min(12, N - idx * 12);
+      if (periodsThisYear < 0) periodsThisYear = 0;
+      var deposits = monthly * periodsThisYear;
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + row.year + "</td><td>" + MM.fmtCurrency(deposits, { cents: false }) +
+        "</td><td>" + MM.fmtCurrency(row.interestThisYear, { cents: false }) +
+        "</td><td>" + MM.fmtCurrency(row.balance, { cents: false }) + "</td>";
+      tb.appendChild(tr);
+    });
+  }
+
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>

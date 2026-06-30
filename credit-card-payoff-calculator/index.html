@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Credit Card Payoff Calculator — Time &amp; Interest | MoneyMath</title>
+<meta name="description" content="Free credit card payoff calculator. Enter your balance, APR, and monthly payment to see how long until you're debt-free and the total interest you'll pay.">
+<link rel="canonical" href="https://moneymath.example/credit-card-payoff-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Credit Card Payoff Calculator — Time to Debt-Free &amp; Interest">
+<meta property="og:description" content="See how many months it takes to clear your credit card with a fixed monthly payment, your debt-free date, and total interest. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/credit-card-payoff-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Credit Card Payoff Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/credit-card-payoff-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How long will it take to pay off my credit card?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It depends on your balance, your APR, and how much you pay each month. The calculator charges interest on the balance every month, applies your fixed payment, and counts how many months it takes to reach zero — then shows the date and the total interest you'll pay." } },
+        { "@type": "Question", "name": "Why does my balance barely go down each month?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Each month interest is added first, equal to your balance times your APR divided by 12. Only the part of your payment left over after that interest reduces the balance. If your payment is close to the monthly interest, almost nothing comes off the principal — and if it is below the interest, the balance can never be cleared." } },
+        { "@type": "Question", "name": "How is credit card interest calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Credit cards charge interest monthly on the outstanding balance. The monthly rate is your APR divided by 12, so a 22.9% APR is about 1.91% per month. On a $6,000 balance that's roughly $114 of interest in the first month alone." } },
+        { "@type": "Question", "name": "Will paying a little more each month really help?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes — dramatically. Because interest compounds on whatever is left, every extra dollar you pay goes straight to principal and stops accruing interest. Raising your monthly payment even modestly can cut years off the payoff and save hundreds or thousands in interest. Try nudging the payment up to see it." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Credit Card Payoff Calculator</h1>
+    <p class="lede">See how long it takes to clear your credit card with a fixed monthly payment, the date you'll be debt-free, and exactly how much interest it costs. Pay more to watch both shrink.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="Credit card payoff calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="balance">Current balance</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="balance" value="6000" min="0" step="100" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="apr">Interest rate (APR)</label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="apr" value="22.9" min="0" step="0.1" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="pay">Monthly payment</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="pay" value="200" min="0" step="10" inputmode="decimal"></div>
+        <span class="hint" id="payhint"></span>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Time to pay off</div>
+      <div class="big" id="payoffTime">—</div>
+      <p class="note" id="warn" hidden></p>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Debt-free date</div><div class="v" id="freedate">—</div></div>
+        <div class="stat"><div class="k">Total interest paid</div><div class="v" id="interest">$0</div></div>
+        <div class="stat"><div class="k">Total amount paid</div><div class="v" id="total">$0</div></div>
+        <div class="stat"><div class="k">Months in total</div><div class="v" id="months">0</div></div>
+        <div class="stat"><div class="k">Interest in 1st payment</div><div class="v" id="firstint">$0</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this credit card payoff calculator works</h2>
+    <p>Credit cards charge interest <strong>every month on whatever you still owe</strong>. Each month the calculator does three things in order:</p>
+    <ol>
+      <li>Adds one month of interest: <code>interest = balance × (APR ÷ 12)</code>.</li>
+      <li>Subtracts your fixed monthly payment.</li>
+      <li>Carries the new, lower balance into the next month.</li>
+    </ol>
+    <p>It repeats until the balance hits zero, counting the months along the way. That month count becomes your <strong>payoff time</strong> and <strong>debt-free date</strong>, and the interest added each month is summed into <strong>total interest paid</strong>.</p>
+
+    <h2>The minimum payment trap</h2>
+    <p>The most important number on this page is the interest added in your first month. If your monthly payment is only a little more than that, almost all of it is eaten by interest and your balance barely moves — stretching a payoff into years and many times the interest. If your payment is <em>less than</em> the monthly interest, the balance actually grows and can <strong>never be paid off</strong>. That's why making only the card's minimum payment can keep you in debt for decades.</p>
+    <p>The break-even line is simple: your payment has to clear <code>balance × (APR ÷ 12)</code> before a single dollar reduces what you owe. Everything above that line is real progress.</p>
+
+    <h3>Three ways to get debt-free faster</h3>
+    <ul>
+      <li><strong>Pay more than the minimum.</strong> Every extra dollar skips interest entirely and goes straight to principal. Raise the payment above and watch the months drop.</li>
+      <li><strong>Lower your APR.</strong> A balance-transfer card or a personal loan at a lower rate means less of each payment is lost to interest.</li>
+      <li><strong>Stop adding new charges.</strong> This calculator assumes no new spending. New purchases reset your progress, so pause the card while you pay it down.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How long will it take to pay off my credit card?</summary>
+      <p>It depends on your balance, your APR, and how much you pay each month. The calculator charges interest on the balance every month, applies your fixed payment, and counts how many months it takes to reach zero — then shows the date and the total interest you'll pay.</p></details>
+    <details><summary>Why does my balance barely go down each month?</summary>
+      <p>Each month interest is added first, equal to your balance times your APR divided by 12. Only the part of your payment left over after that interest reduces the balance. If your payment is close to the monthly interest, almost nothing comes off the principal — and if it is below the interest, the balance can never be cleared.</p></details>
+    <details><summary>How is credit card interest calculated?</summary>
+      <p>Credit cards charge interest monthly on the outstanding balance. The monthly rate is your APR divided by 12, so a 22.9% APR is about 1.91% per month. On a $6,000 balance that's roughly $114 of interest in the first month alone.</p></details>
+    <details><summary>Will paying a little more each month really help?</summary>
+      <p>Yes — dramatically. Because interest compounds on whatever is left, every extra dollar you pay goes straight to principal and stops accruing interest. Raising your monthly payment even modestly can cut years off the payoff and save hundreds or thousands in interest. Try nudging the payment up to see it.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Real cards may compound interest daily, add fees, or apply a variable APR, so your actual payoff may differ. Check your statement and confirm figures with your card issuer.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["balance", "apr", "pay"];
+
+  function fmtMonths(m) {
+    m = Math.round(m);
+    if (m <= 0) return "0 months";
+    var y = Math.floor(m / 12), mo = m % 12, parts = [];
+    if (y) parts.push(y + (y === 1 ? " year" : " years"));
+    if (mo) parts.push(mo + (mo === 1 ? " month" : " months"));
+    return parts.join(" ");
+  }
+
+  function setBig(t) { document.getElementById("payoffTime").textContent = t; }
+  function setStats(freedate, interest, total, months, firstint) {
+    document.getElementById("freedate").textContent = freedate;
+    document.getElementById("interest").textContent = interest;
+    document.getElementById("total").textContent = total;
+    document.getElementById("months").textContent = months;
+    document.getElementById("firstint").textContent = firstint;
+  }
+
+  function compute() {
+    var balance = MM.val("balance"), apr = MM.val("apr"), pay = MM.val("pay");
+    if (!isFinite(balance) || balance < 0) balance = 0;
+    if (!isFinite(apr) || apr < 0) apr = 0;
+    if (!isFinite(pay) || pay < 0) pay = 0;
+
+    // First month's interest (= balance × APR/12) via the shared engine.
+    var firstInterest = MM.simpleInterest(balance, apr, 1 / 12).interest;
+    document.getElementById("payhint").textContent =
+      balance > 0 ? ("Interest this month: " + MM.fmtCurrency(firstInterest)) : "";
+
+    var warn = document.getElementById("warn");
+
+    // Nothing owed.
+    if (balance <= 0) {
+      setBig("You're debt-free");
+      setStats("—", MM.fmtCurrency(0, { cents: false }), MM.fmtCurrency(0, { cents: false }), "0", MM.fmtCurrency(0));
+      warn.hidden = true;
+      return;
+    }
+
+    var r = MM.payoffWithPayment(balance, apr, pay);
+    // Feasible = it actually clears within our 100-year simulation window.
+    var feasible = r.feasible && isFinite(r.months) && r.months > 0 && r.months < 1200;
+
+    if (!feasible) {
+      setBig("Never — payment too low");
+      setStats("Never", "—", "—", "—", MM.fmtCurrency(firstInterest));
+      var suggest = Math.ceil(Math.max(firstInterest + 25, firstInterest * 1.15) / 5) * 5;
+      warn.hidden = false;
+      warn.textContent = "Your payment of " + MM.fmtCurrency(pay) + "/month doesn't even cover the "
+        + MM.fmtCurrency(firstInterest) + " of interest charged at " + MM.fmtPct(apr)
+        + " APR, so the balance never falls. Pay more than " + MM.fmtCurrency(firstInterest)
+        + " a month — try " + MM.fmtCurrency(suggest, { cents: false }) + " or more — to start clearing the debt.";
+      return;
+    }
+
+    warn.hidden = true;
+    var d = new Date();
+    d.setMonth(d.getMonth() + Math.round(r.months));
+    var dateStr = d.toLocaleDateString("en-US", { year: "numeric", month: "long" });
+
+    setBig(fmtMonths(r.months));
+    setStats(
+      dateStr,
+      MM.fmtCurrency(r.totalInterest, { cents: false }),
+      MM.fmtCurrency(r.totalPaid, { cents: false }),
+      String(Math.round(r.months)),
+      MM.fmtCurrency(firstInterest)
+    );
+  }
+
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>

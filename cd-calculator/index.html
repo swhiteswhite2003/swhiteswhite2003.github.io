@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CD Calculator — Certificate of Deposit Maturity | MoneyMath</title>
+<meta name="description" content="Free CD calculator. Enter your deposit, rate/APY and term to see your certificate of deposit's maturity value, interest earned and effective APY.">
+<link rel="canonical" href="https://moneymath.example/cd-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CD Calculator — Certificate of Deposit Maturity & Interest">
+<meta property="og:description" content="See your certificate of deposit's maturity value, interest earned, and effective APY in seconds. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/cd-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "CD Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/cd-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is a certificate of deposit (CD)?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A CD is a savings product where you lock a fixed deposit with a bank for a set term — often 3 months to 5 years — in exchange for a fixed interest rate that's usually higher than a regular savings account. You get your deposit back plus interest at maturity." } },
+        { "@type": "Question", "name": "What's the difference between APY and APR on a CD?",
+          "acceptedAnswer": { "@type": "Answer", "text": "APR is the stated nominal annual rate before compounding. APY (annual percentage yield) is what you actually earn once interest compounds during the year, so it is a little higher. Banks usually advertise CDs by APY. If your bank quoted only an APY, set compounding to Annually so the calculator does not compound it twice." } },
+        { "@type": "Question", "name": "How is my CD's maturity value calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "We use the compound-interest formula FV = P(1 + r/m)^(m·t), where P is your deposit, r is the annual rate, m is the number of compounding periods per year, and t is the term in years. Interest earned is simply the maturity value minus your original deposit." } },
+        { "@type": "Question", "name": "Can I withdraw money from a CD early?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Usually yes, but most banks charge an early-withdrawal penalty — often a few months of interest — which can eat into or even exceed what you have earned. This calculator shows the full-term value and does not subtract any early-withdrawal penalty." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>CD Calculator</h1>
+    <p class="lede">See exactly what a certificate of deposit will be worth at maturity. Enter your deposit, the rate or APY, the term in months, and how often interest compounds — then watch the maturity value and interest earned update live.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="CD calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="deposit">Deposit amount</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="deposit" value="10000" min="0" step="500" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="rate">Interest rate / APY</label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="rate" value="4.5" min="0" step="0.05" inputmode="decimal"></div>
+        <span class="hint">annual rate the bank quotes you</span>
+      </div>
+      <div class="field">
+        <label for="term">Term</label>
+        <div class="input-wrap has-post"><span class="affix post">mo</span>
+          <input type="number" id="term" value="12" min="0" step="1" inputmode="numeric"></div>
+        <span class="hint" id="termyrs"></span>
+      </div>
+      <div class="field">
+        <label for="freq">Compounding frequency</label>
+        <select id="freq">
+          <option value="365">Daily</option>
+          <option value="12" selected>Monthly</option>
+          <option value="4">Quarterly</option>
+          <option value="1">Annually</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Maturity value</div>
+      <div class="big" id="maturity">$0</div>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Initial deposit</div><div class="v" id="depositOut">$0</div></div>
+        <div class="stat"><div class="k">Interest earned</div><div class="v" id="interest">$0</div></div>
+        <div class="stat"><div class="k">Effective APY</div><div class="v" id="apy">—</div></div>
+        <div class="stat"><div class="k">Term</div><div class="v" id="termOut">—</div></div>
+        <div class="stat"><div class="k">Compounding</div><div class="v" id="compounding">—</div></div>
+        <div class="stat"><div class="k">Compounding periods</div><div class="v" id="periods">—</div></div>
+      </div>
+      <p class="hint" id="msg"></p>
+    </div>
+
+    <details>
+      <summary>Show year-by-year growth</summary>
+      <div class="table-wrap">
+        <table id="growth">
+          <thead><tr><th>Year</th><th>Interest earned</th><th>Balance</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this CD calculator works</h2>
+    <p>A certificate of deposit grows by <strong>compound interest</strong>: the bank pays interest on your deposit, then pays interest on that interest each compounding period. The maturity value is found with the standard formula:</p>
+    <p><code>FV = P · (1 + r / m)<sup>m · t</sup></code></p>
+    <p>where <strong>P</strong> is your deposit, <strong>r</strong> is the annual interest rate (as a decimal), <strong>m</strong> is the number of times interest compounds per year (12 for monthly, 365 for daily, 4 for quarterly, 1 for annually), and <strong>t</strong> is the term in years — your term in months divided by 12. <strong>Interest earned</strong> is just the maturity value minus your original deposit.</p>
+
+    <h2>APY vs APR — what your bank is really quoting</h2>
+    <p>This trips a lot of savers up, so it is worth being precise:</p>
+    <ul>
+      <li><strong>APR (annual percentage rate)</strong> is the <em>nominal</em> rate before compounding. A 4.5% APR compounded monthly does not actually return 4.5% over the year — it returns a touch more.</li>
+      <li><strong>APY (annual percentage yield)</strong> is what you <em>actually</em> earn after compounding is baked in. Banks are required to advertise CDs by APY, so the headline number on a CD offer is almost always the APY.</li>
+    </ul>
+    <p>The <strong>Effective APY</strong> field above shows the true annual yield produced by the rate and compounding frequency you entered. Two practical tips: if your bank only gave you an <em>APY</em>, set compounding to <strong>Annually</strong> — an APY already includes compounding, so compounding it again would overstate your return. If your bank gave you a nominal <em>APR</em> plus a compounding schedule, leave the frequency on the schedule they quoted and the Effective APY will tell you the real yield.</p>
+
+    <h2>How to get the most out of a CD</h2>
+    <ul>
+      <li><strong>Compare by APY, not APR.</strong> A higher APY always means more money in your pocket for the same deposit and term — it is the one apples-to-apples number.</li>
+      <li><strong>Match the term to your timeline.</strong> Early withdrawal usually triggers a penalty, so only lock money you will not need before maturity.</li>
+      <li><strong>Consider a CD ladder.</strong> Splitting your cash across several terms keeps part of it maturing regularly, so you stay liquid while still capturing longer-term rates.</li>
+      <li><strong>Check what happens at maturity.</strong> Many CDs auto-renew into a new term at the prevailing rate unless you tell the bank otherwise within the grace period.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>What is a certificate of deposit (CD)?</summary>
+      <p>A CD is a savings product where you lock a fixed deposit with a bank for a set term — often 3 months to 5 years — in exchange for a fixed interest rate that's usually higher than a regular savings account. You get your deposit back plus interest at maturity.</p></details>
+    <details><summary>What's the difference between APY and APR on a CD?</summary>
+      <p>APR is the stated nominal annual rate before compounding. APY (annual percentage yield) is what you actually earn once interest compounds during the year, so it is a little higher. Banks usually advertise CDs by APY. If your bank quoted only an APY, set compounding to <strong>Annually</strong> so the calculator does not compound it twice.</p></details>
+    <details><summary>How is my CD's maturity value calculated?</summary>
+      <p>We use the compound-interest formula <code>FV = P(1 + r/m)<sup>m·t</sup></code>, where P is your deposit, r is the annual rate, m is the number of compounding periods per year, and t is the term in years. Interest earned is simply the maturity value minus your original deposit.</p></details>
+    <details><summary>Can I withdraw money from a CD early?</summary>
+      <p>Usually yes, but most banks charge an early-withdrawal penalty — often a few months of interest — which can eat into or even exceed what you've earned. This calculator shows the full-term value and does not subtract any early-withdrawal penalty.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Actual CD terms, compounding method, rounding, and early-withdrawal penalties vary by bank. Confirm figures with your financial institution before depositing.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["deposit", "rate", "term", "freq"];
+
+  function compute() {
+    var deposit = MM.val("deposit"), rate = MM.val("rate"),
+        months = MM.val("term"), freq = MM.val("freq");
+
+    if (!isFinite(deposit) || deposit < 0) deposit = 0;
+    if (!isFinite(rate) || rate < 0) rate = 0;
+    if (!isFinite(months) || months < 0) months = 0;
+    if (!isFinite(freq) || freq <= 0) freq = 12;
+
+    var years = months / 12;
+    var r = MM.compound(deposit, 0, rate, years, { periodsPerYear: freq });
+    var maturity = r.futureValue;
+    var interest = r.totalInterest;
+
+    // Effective APY = yield on 1 unit over 1 year at this rate + frequency (math via MM.compound).
+    var apy = (MM.compound(1, 0, rate, 1, { periodsPerYear: freq }).futureValue - 1) * 100;
+
+    var sel = document.getElementById("freq");
+    var freqLabel = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : "Monthly";
+
+    var termyrs = document.getElementById("termyrs");
+    termyrs.textContent = months > 0 ? ("= " + MM.fmtNum(years, 2) + " years") : "";
+
+    var bad = !isFinite(maturity) || !isFinite(interest);
+    var matEl = document.getElementById("maturity"),
+        intEl = document.getElementById("interest"),
+        depEl = document.getElementById("depositOut"),
+        apyEl = document.getElementById("apy"),
+        termEl = document.getElementById("termOut"),
+        compEl = document.getElementById("compounding"),
+        perEl = document.getElementById("periods");
+
+    if (bad) {
+      matEl.textContent = "—";
+      intEl.textContent = "—";
+    } else {
+      matEl.textContent = MM.fmtCurrency(maturity);
+      intEl.textContent = MM.fmtCurrency(interest);
+    }
+    depEl.textContent = MM.fmtCurrency(deposit, { cents: false });
+    apyEl.textContent = isFinite(apy) ? MM.fmtPct(apy, 3) : "—";
+    termEl.textContent = months > 0 ? (MM.fmtNum(months) + (months === 1 ? " month" : " months")) : "—";
+    compEl.textContent = freqLabel;
+    perEl.textContent = months > 0 ? MM.fmtNum(Math.round(years * freq)) : "—";
+
+    var msg = "";
+    if (deposit <= 0) msg = "Enter a deposit amount above to see your CD's maturity value.";
+    else if (months <= 0) msg = "Enter a term in months to see how your deposit grows.";
+    else if (bad) msg = "Those numbers are too large to display — try a smaller deposit, rate, or term.";
+    document.getElementById("msg").textContent = msg;
+
+    var tb = document.querySelector("#growth tbody");
+    tb.innerHTML = "";
+    var rows = (r.yearly || []).slice(0, 60);
+    rows.forEach(function (row) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + row.year + "</td><td>" +
+        MM.fmtCurrency(row.interestThisYear, { cents: false }) + "</td><td>" +
+        MM.fmtCurrency(row.balance, { cents: false }) + "</td>";
+      tb.appendChild(tr);
+    });
+    if ((r.yearly || []).length > 60) {
+      var tr2 = document.createElement("tr");
+      tr2.innerHTML = "<td>…</td><td>…</td><td>…</td>";
+      tb.appendChild(tr2);
+    }
+  }
+
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>
