@@ -1,8 +1,28 @@
-# MoneyMath — How to take it live and turn on the $5/day
+# MoneyMath — Live status & how to turn on the $5/day
 
-I (Claude) built the whole site. These are the only steps that need a human, because they're tied
-to **your** identity and money — your hard rule says I can't do them for you. Total hands-on time: ~30–45 min,
-spread over a few days while approvals process.
+## ✅ ALREADY LIVE (done by Claude, free)
+The site is deployed and serving on the public internet:
+
+  **https://swhiteswhite2003.github.io/**
+
+- Hosted free on **GitHub Pages** (repo: `swhiteswhite2003/swhiteswhite2003.github.io`), HTTPS enforced.
+- All 12 calculators + homepage + legal pages live; sitemap at `/sitemap.xml`.
+- Verified end-to-end on the live site: 12/12 pages compute correctly (`MM_BASE=https://swhiteswhite2003.github.io npm run e2e`).
+- Google can now start indexing it. To **delete it**, just say so — `gh repo delete swhiteswhite2003.github.io`.
+
+## ⏳ REMAINING — the money switch (needs YOU; ~15–20 min total)
+Claude can't do these — they're tied to your identity, login, and payment.
+
+1. **Submit the sitemap to Google Search Console** (5 min, FREE) — search.google.com/search-console → add `https://swhiteswhite2003.github.io/` → verify → submit `/sitemap.xml`. This is what actually starts/accelerates indexing. **Highest-leverage step. Do this first.**
+2. **Apply for Google AdSense** (10 min apply, days to approve) — adsense.google.com. NOTE: AdSense usually wants a **real domain**, not a `github.io` subdomain. So to monetize you'll likely need step 3 first.
+3. **(For AdSense) Buy a custom domain (~$10/yr)** and point it at this same GitHub Pages repo (Settings → Pages → Custom domain — GitHub handles the rest). Then re-run AdSense on the real domain. Tell Claude the domain and it re-points all canonical/sitemap URLs in one shot.
+4. When AdSense approves → paste your `ca-pub-…` id into `assets/calc.js` → `CONFIG.adsensePublisherId`. Ad slots are already in every page, dormant until then.
+
+---
+
+## (Original notes — domain/host options if you ever move off GitHub Pages)
+The site is plain static files, so it runs free on any static host. These are the only steps that need a human,
+because they're tied to **your** identity and money. Total hands-on time: ~30–45 min, spread over a few days.
 
 ---
 
