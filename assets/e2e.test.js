@@ -7,7 +7,7 @@
    Run: node assets/e2e.test.js */
 const MM = require("./calc.js");
 const { JSDOM } = require("jsdom");
-const BASE = "http://localhost:8765";
+const BASE = process.env.MM_BASE || "http://localhost:8765";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const num = (s) => parseFloat(String(s).replace(/[^0-9.\-]/g, ""));
@@ -62,6 +62,22 @@ const CASES = [
 ];
 
 async function runCase(c) {
+  // jsdom can lose the external-script ordering race when fetching over a network
+  // (does NOT affect real browsers: scripts are blocking + end-of-body). Retry a few times.
+  let lastErr;
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    try {
+      const res = await runCaseOnce(c);
+      const suspectZero = c.kind !== "months" && Math.abs(res.got) < 1e-9 && Math.abs(c.expected) > 1;
+      if (!suspectZero) return res;
+      lastErr = new Error("got 0 (suspected jsdom load race)");
+    } catch (e) { lastErr = e; }
+    await sleep(250);
+  }
+  throw lastErr;
+}
+
+async function runCaseOnce(c) {
   const dom = await JSDOM.fromURL(`${BASE}/${c.slug}/`, {
     runScripts: "dangerously", resources: "usable", pretendToBeVisual: true
   });
