@@ -52,5 +52,41 @@ let d2 = MM.debtPayoff([
 ok("debt multi pays off (feasible)", d2.feasible ? 1 : 0, 1, 0);
 ok("debt multi order has 2", d2.order.length, 2, 0);
 
+console.log("solveContribution():");
+// To hit 609,985.5 in 30y @7% from 0 -> ~500/mo (inverse of the compound test above)
+let sc = MM.solveContribution(609985.5, 0, 7, 30, { periodsPerYear: 12 });
+ok("solve 609,985 over 30y @7% -> ~500/mo", sc.contribution, 500, 0.5);
+// round-trip: feed solved contribution back into compound -> should reach target
+let rt = MM.compound(0, sc.contribution, 7, 30, { periodsPerYear: 12 });
+ok("solveContribution round-trips through compound", rt.futureValue, 609985.5, 5);
+// 0% rate: need 12000 in 1y from 0 -> 1000/mo
+let sc0 = MM.solveContribution(12000, 0, 0, 1, { periodsPerYear: 12 });
+ok("solve 0% 12k in 1y -> 1000/mo", sc0.contribution, 1000, 0.01);
+
+console.log("payoffWithPayment():");
+// 5000 @ 18% APR, paying 200/mo -> ~32 months (well-known credit-card example)
+let pp = MM.payoffWithPayment(5000, 18, 200);
+ok("cc 5000 @18% / 200 mo -> ~32 months", pp.months, 32, 1);
+ok("cc payoff is feasible", pp.feasible ? 1 : 0, 1, 0);
+// payment below monthly interest -> infeasible (5000*18%/12 = 75; pay 50)
+let ppx = MM.payoffWithPayment(5000, 18, 50);
+ok("cc underpayment infeasible", ppx.feasible ? 0 : 1, 1, 0);
+// 0% balance transfer: 1200 @0% / 100 -> 12 months, 0 interest
+let pp0 = MM.payoffWithPayment(1200, 0, 100);
+ok("cc 0% 1200/100 -> 12 months", pp0.months, 12, 0);
+ok("cc 0% no interest", pp0.totalInterest, 0, 0.01);
+
+console.log("roi() + simpleInterest():");
+// 1000 -> 2000 over 0 years -> 100% total return
+let r1 = MM.roi(1000, 2000, 0);
+ok("roi 1000->2000 total 100%", r1.totalReturnPct, 100, 0.01);
+// 1000 -> 1000*1.1^5 over 5y -> 10% annualized
+let r2 = MM.roi(1000, 1000 * Math.pow(1.1, 5), 5);
+ok("roi annualized 10%", r2.annualizedPct, 10, 0.01);
+// simple interest: 1000 @5% for 3y = 150 interest
+let si = MM.simpleInterest(1000, 5, 3);
+ok("simple interest 1000@5%/3y = 150", si.interest, 150, 0.01);
+ok("simple interest total = 1150", si.total, 1150, 0.01);
+
 console.log("\n" + pass + " passed, " + fail + " failed.");
 process.exit(fail ? 1 : 0);

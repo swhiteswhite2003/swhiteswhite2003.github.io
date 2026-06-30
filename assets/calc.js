@@ -238,6 +238,67 @@
     };
   }
 
+  /* Solve for the regular contribution needed to reach a target future value.
+     PMT = (FV − P(1+i)^N) · i / ((1+i)^N − 1).  Handles i = 0 and "already there". */
+  function solveContribution(target, principal, annualRatePct, years, opts) {
+    opts = opts || {};
+    const m = opts.periodsPerYear || 12;
+    const N = Math.round((years || 0) * m);
+    const i = (annualRatePct || 0) / 100 / m;
+    target = target || 0; principal = principal || 0;
+    if (N <= 0) return { contribution: Infinity, periodsPerYear: m, periods: 0 };
+    let pmt;
+    if (i === 0) pmt = (target - principal) / N;
+    else {
+      const growth = Math.pow(1 + i, N);
+      pmt = (target - principal * growth) * i / (growth - 1);
+    }
+    return { contribution: Math.max(0, pmt), periodsPerYear: m, periods: N };
+  }
+
+  /* Pay off a fixed balance with a FIXED monthly payment (e.g. credit card).
+     Simulates to get exact months + interest. Infeasible if payment <= monthly interest. */
+  function payoffWithPayment(balance, annualRatePct, monthlyPayment) {
+    balance = Math.max(0, balance || 0);
+    const r = (annualRatePct || 0) / 100 / 12;
+    monthlyPayment = Math.max(0, monthlyPayment || 0);
+    if (balance <= 0) return { months: 0, totalInterest: 0, totalPaid: 0, feasible: true };
+    if (r > 0 && monthlyPayment <= balance * r + 1e-9) {
+      return { months: Infinity, totalInterest: Infinity, totalPaid: Infinity, feasible: false };
+    }
+    if (monthlyPayment <= 0) return { months: Infinity, totalInterest: Infinity, totalPaid: Infinity, feasible: false };
+    let bal = balance, months = 0, totalInterest = 0, totalPaid = 0;
+    while (bal > 0.005 && months < 1200) {
+      months++;
+      const interest = bal * r;
+      let principalPaid = monthlyPayment - interest;
+      if (principalPaid > bal) principalPaid = bal;
+      bal -= principalPaid;
+      totalInterest += interest;
+      totalPaid += interest + principalPaid;
+    }
+    return { months: months, years: months / 12, totalInterest: totalInterest, totalPaid: totalPaid, feasible: true };
+  }
+
+  /* Return on investment. Total return and annualized (CAGR) return. */
+  function roi(initial, finalValue, years) {
+    initial = initial || 0; finalValue = finalValue || 0;
+    const gain = finalValue - initial;
+    const totalReturnPct = initial > 0 ? (gain / initial) * 100 : 0;
+    let annualizedPct = totalReturnPct;
+    if (initial > 0 && years > 0 && finalValue > 0) {
+      annualizedPct = (Math.pow(finalValue / initial, 1 / years) - 1) * 100;
+    }
+    return { gain: gain, totalReturnPct: totalReturnPct, annualizedPct: annualizedPct };
+  }
+
+  /* Simple (non-compounding) interest:  I = P · r · t. */
+  function simpleInterest(principal, annualRatePct, years) {
+    principal = principal || 0;
+    const interest = principal * (annualRatePct || 0) / 100 * (years || 0);
+    return { interest: interest, total: principal + interest };
+  }
+
   /* ----------------------------------------------------------------
      UI helpers
      ---------------------------------------------------------------- */
@@ -310,6 +371,8 @@
     CONFIG: CONFIG,
     parseNum: parseNum, fmtCurrency: fmtCurrency, fmtNum: fmtNum, fmtPct: fmtPct,
     amortize: amortize, compound: compound, debtPayoff: debtPayoff,
+    solveContribution: solveContribution, payoffWithPayment: payoffWithPayment,
+    roi: roi, simpleInterest: simpleInterest,
     $: $, val: val, debounce: debounce
   };
   global.MM = MM;
