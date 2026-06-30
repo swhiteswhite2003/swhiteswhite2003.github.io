@@ -1,0 +1,16 @@
+{
+  "name": "money-calculators",
+  "version": "1.0.0",
+  "description": "MoneyMath finance calculators (static site)",
+  "main": "index.js",
+  "scripts": {
+    "test": "node assets/calc.test.js && node assets/e2e.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "jsdom": "^29.1.1"
+  }
+}
