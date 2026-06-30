@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://moneymath.example/sitemap.xml
+Sitemap: https://swhiteswhite2003.github.io/sitemap.xml

@@ -10,7 +10,7 @@
      ---------------------------------------------------------------- */
   const CONFIG = {
     brand: "MoneyMath",
-    domain: "moneymath.example",            // <- replace with your real domain
+    domain: "swhiteswhite2003.github.io",            // <- replace with your real domain
     adsensePublisherId: "",                  // <- "ca-pub-XXXXXXXXXXXXXXXX" after AdSense approval
     ga4Id: "",                               // <- "G-XXXXXXXXXX" for Google Analytics (optional)
     defaultCurrency: "USD",
