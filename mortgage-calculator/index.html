@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mortgage Calculator — Monthly Payment & Amortization | MoneyMath</title>
+<meta name="description" content="Free mortgage calculator. Enter home price, down payment, rate and term to see your monthly payment, total interest, and a full year-by-year amortization schedule.">
+<link rel="canonical" href="https://moneymath.example/mortgage-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mortgage Calculator — Monthly Payment & Amortization">
+<meta property="og:description" content="See your monthly mortgage payment, total interest, and full amortization schedule in seconds. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/mortgage-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Mortgage Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/mortgage-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How is a monthly mortgage payment calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The principal and interest payment uses M = P · r(1+r)^n / ((1+r)^n − 1), where P is the loan amount, r is the monthly interest rate (annual rate ÷ 12), and n is the number of monthly payments (years × 12)." } },
+        { "@type": "Question", "name": "Does this mortgage calculator include taxes and insurance?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Enter your annual property tax and home insurance and the calculator adds them to your monthly principal-and-interest payment to estimate your full monthly housing cost (PITI)." } },
+        { "@type": "Question", "name": "How much does making extra payments save?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Adding an extra amount each month goes straight to principal, which shortens the loan and cuts total interest. Enter an extra monthly amount to see your new payoff time and interest saved." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Mortgage Calculator</h1>
+    <p class="lede">Estimate your monthly mortgage payment, total interest, and full amortization schedule. Add property tax, insurance, and extra payments for a complete picture.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="Mortgage calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="price">Home price</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="price" value="400000" min="0" step="1000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="down">Down payment</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="down" value="80000" min="0" step="1000" inputmode="decimal"></div>
+        <span class="hint" id="downpct"></span>
+      </div>
+      <div class="field">
+        <label for="rate">Interest rate (APR)</label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="rate" value="6.5" min="0" step="0.05" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="term">Loan term</label>
+        <select id="term">
+          <option value="30">30 years</option>
+          <option value="20">20 years</option>
+          <option value="15">15 years</option>
+          <option value="10">10 years</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="tax">Property tax <span class="hint">/ year (optional)</span></label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="tax" value="0" min="0" step="100" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="ins">Home insurance <span class="hint">/ year (optional)</span></label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="ins" value="0" min="0" step="100" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="extra">Extra monthly payment <span class="hint">(optional)</span></label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="extra" value="0" min="0" step="50" inputmode="decimal"></div>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Monthly payment</div>
+      <div class="big" id="monthly">$0</div>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Loan amount</div><div class="v" id="loan">$0</div></div>
+        <div class="stat"><div class="k">Total interest</div><div class="v" id="interest">$0</div></div>
+        <div class="stat"><div class="k">Total of payments</div><div class="v" id="total">$0</div></div>
+        <div class="stat"><div class="k">Principal &amp; interest</div><div class="v" id="pi">$0</div></div>
+        <div class="stat"><div class="k">Taxes &amp; insurance / mo</div><div class="v" id="ti">$0</div></div>
+        <div class="stat"><div class="k">Payoff time</div><div class="v" id="payoff">—</div></div>
+      </div>
+    </div>
+
+    <details>
+      <summary>Show amortization schedule (yearly)</summary>
+      <div class="table-wrap">
+        <table id="sched">
+          <thead><tr><th>Year</th><th>Principal paid</th><th>Interest paid</th><th>Balance</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this mortgage calculator works</h2>
+    <p>Your monthly <strong>principal and interest</strong> (P&amp;I) is found with the standard amortizing-loan formula:</p>
+    <p><code>M = P · r(1 + r)<sup>n</sup> / ((1 + r)<sup>n</sup> − 1)</code></p>
+    <p>where <strong>P</strong> is the loan amount (home price minus down payment), <strong>r</strong> is the monthly interest rate (your APR ÷ 12), and <strong>n</strong> is the number of monthly payments (loan term in years × 12). Property tax and home insurance, if entered, are divided by 12 and added on top to estimate your full monthly housing cost — often called <strong>PITI</strong>.</p>
+
+    <h2>Why your interest rate matters so much</h2>
+    <p>On a 30-year loan you make 360 payments, so even a small rate difference compounds into tens of thousands of dollars. Try nudging the rate up or down by half a point and watch the total interest move — that is the single biggest lever on what your home really costs.</p>
+
+    <h3>Three ways to pay less interest</h3>
+    <ul>
+      <li><strong>Bigger down payment.</strong> Less borrowed means less interest and a smaller payment.</li>
+      <li><strong>Shorter term.</strong> A 15-year loan has a higher monthly payment but far less total interest than a 30-year.</li>
+      <li><strong>Extra monthly payments.</strong> Any extra goes straight to principal — enter an amount above to see how many years it shaves off.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How is my monthly mortgage payment calculated?</summary>
+      <p>The principal-and-interest portion uses <code>M = P · r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> − 1)</code>. We then add any monthly property tax and insurance you enter.</p></details>
+    <details><summary>Does this include property tax and insurance?</summary>
+      <p>Yes — both are optional fields. Leave them at 0 for principal and interest only, or enter your annual amounts to see your full estimated monthly cost (PITI).</p></details>
+    <details><summary>How much do extra payments save?</summary>
+      <p>Extra payments reduce principal directly, so they cut both your payoff time and total interest. The result box updates the payoff time as soon as you enter an extra amount.</p></details>
+    <details><summary>Is this calculator free?</summary>
+      <p>Completely free, no sign-up, and your numbers never leave your browser — all the math runs on your device.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Your actual loan terms, taxes, insurance, and PMI may differ. Confirm figures with your lender.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["price","down","rate","term","tax","ins","extra"];
+  function compute() {
+    var price = MM.val("price"), down = MM.val("down"), rate = MM.val("rate"),
+        term = MM.val("term"), tax = MM.val("tax"), ins = MM.val("ins"), extra = MM.val("extra");
+    if (!isFinite(price)) price = 0;
+    if (!isFinite(down)) down = 0;
+    var loan = Math.max(0, price - down);
+    var r = MM.amortize(loan, rate, term, { extraMonthly: extra });
+    var monthlyTI = ((tax || 0) + (ins || 0)) / 12;
+    var pi = r.monthlyPayment;
+    var totalMonthly = pi + (extra > 0 ? extra : 0) + monthlyTI;
+
+    document.getElementById("monthly").textContent = MM.fmtCurrency(totalMonthly);
+    document.getElementById("loan").textContent = MM.fmtCurrency(loan, { cents: false });
+    document.getElementById("interest").textContent = MM.fmtCurrency(r.totalInterest, { cents: false });
+    document.getElementById("total").textContent = MM.fmtCurrency(r.totalPaid + (tax + ins) / 12 * r.months, { cents: false });
+    document.getElementById("pi").textContent = MM.fmtCurrency(pi);
+    document.getElementById("ti").textContent = MM.fmtCurrency(monthlyTI);
+    document.getElementById("payoff").textContent = r.months ? (r.payoffYears.toFixed(1) + " yrs") : "—";
+
+    var pct = price > 0 ? (down / price * 100) : 0;
+    document.getElementById("downpct").textContent = isFinite(pct) ? (pct.toFixed(1) + "% of price") : "";
+
+    var tb = document.querySelector("#sched tbody");
+    tb.innerHTML = "";
+    r.schedule.forEach(function (row) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + row.year + "</td><td>" + MM.fmtCurrency(row.principal, {cents:false}) +
+        "</td><td>" + MM.fmtCurrency(row.interest, {cents:false}) +
+        "</td><td>" + MM.fmtCurrency(row.balance, {cents:false}) + "</td>";
+      tb.appendChild(tr);
+    });
+  }
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>

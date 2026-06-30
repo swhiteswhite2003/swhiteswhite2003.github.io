@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auto Loan Calculator — Monthly Car Payment | MoneyMath</title>
+<meta name="description" content="Free auto loan calculator. Enter price, down payment, trade-in, APR and term to see your monthly car payment, total interest, and payoff schedule.">
+<link rel="canonical" href="https://moneymath.example/auto-loan-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Auto Loan Calculator — Monthly Car Payment">
+<meta property="og:description" content="Work out your monthly car payment, total interest, and full payoff schedule in seconds. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/auto-loan-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Auto Loan Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/auto-loan-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How is my monthly car payment calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Your payment uses M = P · r(1+r)^n / ((1+r)^n − 1), where P is the amount financed (vehicle price minus your down payment and trade-in), r is the monthly interest rate (APR ÷ 12), and n is the loan term in months. A higher APR or longer term changes the monthly payment and the total interest you pay." } },
+        { "@type": "Question", "name": "How do a down payment and trade-in affect my auto loan?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Both reduce the amount you finance dollar-for-dollar. The loan equals price minus down payment minus trade-in value, so a larger down payment or trade-in lowers your monthly payment and cuts the total interest. Putting 10–20% down also helps you avoid being upside-down on the loan." } },
+        { "@type": "Question", "name": "Is a 72- or 84-month car loan a good idea?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A longer term lowers the monthly payment but you pay far more total interest, and you can owe more than the car is worth for years because vehicles depreciate faster than the balance falls. Compare a 60-month term against 72 or 84 months and watch the total interest jump before you decide." } },
+        { "@type": "Question", "name": "Does this auto loan calculator include tax, title, and fees?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. It estimates principal and interest on the amount financed. Sales tax, title, registration, dealer fees, and any add-ons like gap insurance or an extended warranty are not included unless you fold them into the vehicle price you enter." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Auto Loan Calculator</h1>
+    <p class="lede">Estimate your monthly car payment, total interest, and full payoff schedule. Enter the vehicle price, your down payment and trade-in, your APR, and the loan term to see exactly what financing a car will cost.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="Auto loan calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="price">Vehicle price</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="price" value="35000" min="0" step="500" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="down">Down payment</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="down" value="5000" min="0" step="500" inputmode="decimal"></div>
+        <span class="hint" id="downpct"></span>
+      </div>
+      <div class="field">
+        <label for="tradein">Trade-in value <span class="hint">(optional)</span></label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="tradein" value="0" min="0" step="500" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="rate">Interest rate (APR)</label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="rate" value="7.5" min="0" step="0.05" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="term">Loan term</label>
+        <select id="term">
+          <option value="36">36 months (3 years)</option>
+          <option value="48">48 months (4 years)</option>
+          <option value="60" selected>60 months (5 years)</option>
+          <option value="72">72 months (6 years)</option>
+          <option value="84">84 months (7 years)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Monthly payment</div>
+      <div class="big" id="monthly">$0</div>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Amount financed</div><div class="v" id="loan">$0</div></div>
+        <div class="stat"><div class="k">Total interest</div><div class="v" id="interest">$0</div></div>
+        <div class="stat"><div class="k">Total of payments</div><div class="v" id="total">$0</div></div>
+        <div class="stat"><div class="k">Total vehicle cost</div><div class="v" id="cost">$0</div></div>
+        <div class="stat"><div class="k">Payoff time</div><div class="v" id="payoff">—</div></div>
+      </div>
+    </div>
+
+    <details>
+      <summary>Show payoff schedule (yearly)</summary>
+      <div class="table-wrap">
+        <table id="sched">
+          <thead><tr><th>Year</th><th>Principal paid</th><th>Interest paid</th><th>Balance</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this auto loan calculator works</h2>
+    <p>First we find the <strong>amount financed</strong> — the part of the car you actually borrow:</p>
+    <p><code>Amount financed = vehicle price − down payment − trade-in value</code></p>
+    <p>Your monthly payment then comes from the standard amortizing-loan formula:</p>
+    <p><code>M = P · r(1 + r)<sup>n</sup> / ((1 + r)<sup>n</sup> − 1)</code></p>
+    <p>where <strong>P</strong> is the amount financed, <strong>r</strong> is the monthly interest rate (your APR ÷ 12), and <strong>n</strong> is the number of monthly payments (the loan term — 36, 48, 60, 72, or 84 months). Every payment is split between interest on the remaining balance and principal that pays the loan down; early payments are mostly interest, later ones mostly principal.</p>
+
+    <h2>Why the term you pick matters more than the monthly payment</h2>
+    <p>Stretching a car loan to 72 or 84 months makes the monthly number look friendlier, but it is one of the most expensive habits in personal finance. You pay interest for years longer, and because a car loses value far faster than the loan balance falls, you can spend most of the term <strong>upside-down</strong> — owing more than the car is worth. Switch the term above from 60 to 84 months and watch the total interest climb while the loan amount stays the same.</p>
+
+    <h3>Three ways to cut what your car really costs</h3>
+    <ul>
+      <li><strong>Put more down.</strong> A larger down payment or trade-in lowers the amount financed, so both the monthly payment and the total interest drop — and you avoid going upside-down.</li>
+      <li><strong>Shop the APR, not just the payment.</strong> A point or two off your rate can save hundreds. Get pre-approved at a bank or credit union before you set foot in the dealership.</li>
+      <li><strong>Choose the shortest term you can afford.</strong> A 48- or 60-month loan costs far less in interest than 72 or 84 months for the same car.</li>
+    </ul>
+
+    <h2>What this estimate does and doesn't include</h2>
+    <p>The result covers <strong>principal and interest only</strong> on the amount you finance. It does not add sales tax, title, registration, documentation or dealer fees, or optional add-ons like gap insurance and extended warranties. If those will be rolled into your loan, include them in the vehicle price so the payment reflects the real total. It also excludes ongoing costs of ownership — fuel, insurance, and maintenance — which you should budget separately.</p>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How is my monthly car payment calculated?</summary>
+      <p>It uses <code>M = P · r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> − 1)</code>, where <code>P</code> is the amount financed (price minus down payment and trade-in), <code>r</code> is your APR ÷ 12, and <code>n</code> is the term in months. A higher APR or longer term changes both the payment and the total interest.</p></details>
+    <details><summary>How do a down payment and trade-in affect my loan?</summary>
+      <p>Both cut the amount you finance dollar-for-dollar. The loan equals price minus down payment minus trade-in, so a bigger down payment or trade-in lowers your monthly payment, reduces total interest, and helps you avoid owing more than the car is worth.</p></details>
+    <details><summary>Is a 72- or 84-month car loan a good idea?</summary>
+      <p>It lowers the monthly payment but you pay much more interest overall, and you can stay upside-down for years because cars depreciate quickly. Compare a 60-month term against 72 or 84 months above and watch the total interest jump before committing.</p></details>
+    <details><summary>Does this include tax, title, and fees?</summary>
+      <p>No — it estimates principal and interest on the amount financed. Sales tax, title, registration, dealer fees, and add-ons like gap insurance or an extended warranty aren't included unless you add them to the vehicle price you enter.</p></details>
+    <details><summary>Is this calculator free?</summary>
+      <p>Completely free, no sign-up, and your numbers never leave your browser — all the math runs on your device.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Your actual APR, fees, taxes, and loan terms depend on the lender, the vehicle, and your credit. Confirm figures with your lender or dealer before signing.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["price","down","tradein","rate","term"];
+  function compute() {
+    var price = MM.val("price"), down = MM.val("down"), tradein = MM.val("tradein"),
+        rate = MM.val("rate"), months = MM.val("term");
+    if (!isFinite(price)) price = 0;
+    if (!isFinite(down)) down = 0;
+    if (!isFinite(tradein)) tradein = 0;
+    if (!isFinite(months) || months <= 0) months = 0;
+
+    var loan = Math.max(0, price - down - tradein);
+    var r = MM.amortize(loan, rate, months / 12, {});
+    var totalCost = price + r.totalInterest;
+
+    document.getElementById("monthly").textContent = MM.fmtCurrency(r.monthlyPayment);
+    document.getElementById("loan").textContent = MM.fmtCurrency(loan, { cents: false });
+    document.getElementById("interest").textContent = MM.fmtCurrency(r.totalInterest, { cents: false });
+    document.getElementById("total").textContent = MM.fmtCurrency(r.totalPaid, { cents: false });
+    document.getElementById("cost").textContent = MM.fmtCurrency(totalCost, { cents: false });
+    document.getElementById("payoff").textContent = r.months ? (r.months + " months") : "—";
+
+    var pct = price > 0 ? (down / price * 100) : 0;
+    document.getElementById("downpct").textContent = (price > 0 && isFinite(pct)) ? (pct.toFixed(1) + "% of price") : "";
+
+    var tb = document.querySelector("#sched tbody");
+    tb.innerHTML = "";
+    r.schedule.forEach(function (row) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + row.year + "</td><td>" + MM.fmtCurrency(row.principal, {cents:false}) +
+        "</td><td>" + MM.fmtCurrency(row.interest, {cents:false}) +
+        "</td><td>" + MM.fmtCurrency(row.balance, {cents:false}) + "</td>";
+      tb.appendChild(tr);
+    });
+  }
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  var termEl = document.getElementById("term");
+  if (termEl) termEl.addEventListener("change", compute);
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>

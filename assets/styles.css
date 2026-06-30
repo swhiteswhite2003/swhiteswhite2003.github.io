@@ -1,0 +1,172 @@
+/* MoneyMath — shared design system
+   One file, no framework, no web fonts (system stack = fast = better SEO).
+   To rebrand: change --brand color below + the brand text in each HTML header. */
+
+:root {
+  --brand: #0b7a4b;          /* money green */
+  --brand-dark: #075c38;
+  --brand-soft: #e8f5ee;
+  --ink: #18211c;
+  --ink-soft: #4a5a51;
+  --line: #dfe6e1;
+  --bg: #ffffff;
+  --bg-alt: #f6f9f7;
+  --warn: #b45309;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(16,40,28,.08), 0 8px 24px rgba(16,40,28,.06);
+  --maxw: 880px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.6;
+  font-size: 17px;
+}
+
+a { color: var(--brand-dark); }
+a:hover { color: var(--brand); }
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+/* ---- Header ---- */
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 20;
+}
+.site-header .wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.brand {
+  font-weight: 800; font-size: 20px; letter-spacing: -.02em;
+  color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.brand .mark { color: var(--brand); }
+.nav a { margin-left: 18px; text-decoration: none; color: var(--ink-soft); font-size: 15px; font-weight: 600; }
+.nav a:hover { color: var(--brand); }
+@media (max-width: 560px){ .nav a { margin-left: 12px; font-size: 13px; } .brand { font-size: 18px; } }
+
+/* ---- Hero / page head ---- */
+.page-head { padding: 36px 0 8px; }
+.page-head h1 { font-size: 32px; line-height: 1.15; margin: 0 0 8px; letter-spacing: -.02em; }
+.page-head p.lede { font-size: 18px; color: var(--ink-soft); margin: 0; max-width: 60ch; }
+@media (max-width: 560px){ .page-head h1 { font-size: 26px; } }
+
+/* ---- Calculator card ---- */
+.calc {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  margin: 22px 0;
+}
+.calc .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 22px; }
+@media (max-width: 640px){ .calc .grid { grid-template-columns: 1fr; } }
+
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+.field label { font-weight: 600; font-size: 14px; color: var(--ink-soft); }
+.field .hint { font-size: 12px; color: var(--ink-soft); opacity: .8; }
+.input-wrap { position: relative; display: flex; align-items: center; }
+.input-wrap .affix {
+  position: absolute; color: var(--ink-soft); font-size: 15px; pointer-events: none;
+}
+.input-wrap .affix.pre { left: 12px; }
+.input-wrap .affix.post { right: 12px; }
+input[type="number"], input[type="text"], select {
+  width: 100%; padding: 11px 12px; font-size: 16px;
+  border: 1px solid var(--line); border-radius: 9px; background: var(--bg-alt); color: var(--ink);
+  -webkit-appearance: none; appearance: none;
+}
+.input-wrap.has-pre input { padding-left: 26px; }
+.input-wrap.has-post input { padding-right: 40px; }
+input:focus, select:focus { outline: 2px solid var(--brand); outline-offset: 0; background: #fff; }
+
+.btn {
+  display: inline-block; background: var(--brand); color: #fff; border: 0;
+  padding: 12px 22px; font-size: 16px; font-weight: 700; border-radius: 9px; cursor: pointer;
+}
+.btn:hover { background: var(--brand-dark); }
+.btn.secondary { background: transparent; color: var(--brand-dark); border: 1px solid var(--line); }
+
+/* ---- Results ---- */
+.result {
+  margin-top: 18px; background: var(--brand-soft); border: 1px solid #cde8da;
+  border-radius: var(--radius); padding: 20px;
+}
+.result .headline { font-size: 14px; color: var(--brand-dark); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.result .big { font-size: 38px; font-weight: 800; letter-spacing: -.02em; margin: 4px 0 14px; color: var(--ink); }
+.result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+@media (max-width: 560px){ .result-grid { grid-template-columns: 1fr 1fr; } .result .big { font-size: 30px; } }
+.stat { background: #fff; border: 1px solid #d5ebe0; border-radius: 9px; padding: 12px; }
+.stat .k { font-size: 12px; color: var(--ink-soft); font-weight: 600; }
+.stat .v { font-size: 19px; font-weight: 700; margin-top: 2px; }
+
+/* ---- Table ---- */
+.table-wrap { overflow-x: auto; margin: 14px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: right; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--ink-soft); font-weight: 700; background: var(--bg-alt); position: sticky; top: 0; }
+
+/* ---- Content / SEO copy ---- */
+.content { padding: 8px 0 24px; }
+.content h2 { font-size: 24px; margin: 28px 0 8px; letter-spacing: -.01em; }
+.content h3 { font-size: 19px; margin: 20px 0 6px; }
+.content p, .content li { color: #2b3830; }
+.content ul, .content ol { padding-left: 22px; }
+details { border: 1px solid var(--line); border-radius: 9px; padding: 4px 14px; margin: 10px 0; background: var(--bg); }
+details summary { cursor: pointer; font-weight: 600; padding: 8px 0; }
+details[open] summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+
+/* ---- Cards grid (homepage) ---- */
+.cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin: 24px 0; }
+@media (max-width: 720px){ .cards { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px){ .cards { grid-template-columns: 1fr; } }
+.card {
+  display: block; text-decoration: none; color: inherit;
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; background: var(--bg);
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: #cfe3d8; }
+.card .ico { font-size: 26px; }
+.card h3 { margin: 8px 0 4px; font-size: 18px; color: var(--ink); }
+.card p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+
+/* ---- Ad slots (filled after AdSense approval; invisible until then) ---- */
+.ad-slot {
+  margin: 22px 0; min-height: 90px; display: flex; align-items: center; justify-content: center;
+  border: 1px dashed var(--line); border-radius: 9px; color: var(--line); font-size: 12px;
+  background: var(--bg-alt);
+}
+.ad-slot::after { content: "Ad"; }
+body.live .ad-slot { border: 0; background: transparent; min-height: 0; }
+body.live .ad-slot::after { content: ""; }
+
+/* ---- Disclaimer / notes ---- */
+.note { background: #fff8ec; border: 1px solid #f3e2bf; color: var(--warn); border-radius: 9px; padding: 12px 14px; font-size: 14px; margin: 16px 0; }
+
+/* ---- Footer ---- */
+.site-footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 28px 0; background: var(--bg-alt); font-size: 14px; color: var(--ink-soft); }
+.site-footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 22px; justify-content: space-between; align-items: center; }
+.site-footer a { color: var(--ink-soft); text-decoration: none; margin-right: 16px; }
+.site-footer a:hover { color: var(--brand); }
+
+/* ---- Cookie banner ---- */
+#cookie-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; background: var(--ink); color: #fff;
+  padding: 14px 20px; font-size: 14px; display: none; z-index: 50;
+}
+#cookie-bar.show { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; }
+#cookie-bar a { color: #9fe3c2; }
+#cookie-bar button { background: var(--brand); color: #fff; border: 0; padding: 8px 16px; border-radius: 7px; font-weight: 700; cursor: pointer; }
+
+.visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }

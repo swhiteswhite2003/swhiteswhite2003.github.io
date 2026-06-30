@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retirement Calculator — Savings & Nest Egg | MoneyMath</title>
+<meta name="description" content="Free retirement savings calculator. Enter your age, current savings, monthly contribution and expected return to project your nest egg at retirement.">
+<link rel="canonical" href="https://moneymath.example/retirement-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Retirement Calculator — Savings & Nest Egg">
+<meta property="og:description" content="Project how big your retirement nest egg will grow from your current savings and monthly contributions. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/retirement-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Retirement Savings Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/retirement-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How much money do I need to retire?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A common rule of thumb is the 4% rule: you can withdraw about 4% of your nest egg in your first year of retirement, which means you need roughly 25 times your desired annual spending. This calculator shows an estimated safe monthly income based on 4% of your projected balance." } },
+        { "@type": "Question", "name": "Does this retirement calculator account for inflation and taxes?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The projected nest egg is shown in today's dollars before inflation and before any income tax on withdrawals. Inflation typically erodes purchasing power by 2-3% a year, so a useful trick is to enter a return that is 2-3 points lower than your nominal expected return to see an inflation-adjusted figure." } },
+        { "@type": "Question", "name": "What is a realistic expected annual return?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Historically a stock-heavy portfolio has returned about 7% per year before inflation, while a balanced stock-and-bond mix is often modeled at 5-6%. Use a conservative number you are comfortable with — the calculator updates instantly so you can compare scenarios." } },
+        { "@type": "Question", "name": "Why does starting early matter so much?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Because of compounding, the money you invest in your 20s and 30s has decades to grow and earn returns on its returns. Contributions made early often end up being worth far more at retirement than the same dollars saved a decade later." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Retirement Savings Calculator</h1>
+    <p class="lede">See how big your retirement nest egg could grow. Enter your current age, target retirement age, savings so far, monthly contribution, and expected return — the projection updates as you type.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="Retirement savings calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="currentAge">Current age</label>
+        <input type="number" id="currentAge" value="30" min="0" max="120" step="1" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="retireAge">Retirement age</label>
+        <input type="number" id="retireAge" value="65" min="0" max="120" step="1" inputmode="numeric">
+        <span class="hint" id="span"></span>
+      </div>
+      <div class="field">
+        <label for="savings">Current savings</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="savings" value="25000" min="0" step="1000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="monthly">Monthly contribution</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="monthly" value="500" min="0" step="50" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="rate">Expected annual return</label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="rate" value="7" min="0" step="0.1" inputmode="decimal"></div>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Projected nest egg at retirement</div>
+      <div class="big" id="nestegg">$0</div>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Years until retirement</div><div class="v" id="years">—</div></div>
+        <div class="stat"><div class="k">Retirement age</div><div class="v" id="retireAt">—</div></div>
+        <div class="stat"><div class="k">Total contributed</div><div class="v" id="contributed">$0</div></div>
+        <div class="stat"><div class="k">Growth from returns</div><div class="v" id="growth">$0</div></div>
+        <div class="stat"><div class="k">Starting balance</div><div class="v" id="starting">$0</div></div>
+        <div class="stat"><div class="k">Est. income (4% rule)</div><div class="v" id="income">—</div></div>
+      </div>
+    </div>
+
+    <details>
+      <summary>Show year-by-year growth</summary>
+      <div class="table-wrap">
+        <table id="sched">
+          <thead><tr><th>Year</th><th>Age</th><th>Growth that year</th><th>Balance</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this retirement calculator works</h2>
+    <p>Your projected balance combines two things: your <strong>current savings growing on their own</strong>, and the stream of <strong>monthly contributions you keep adding</strong>. Both compound month after month using the future-value formula:</p>
+    <p><code>FV = P(1 + i)<sup>N</sup> + PMT · ((1 + i)<sup>N</sup> − 1) / i</code></p>
+    <p>where <strong>P</strong> is your current savings, <strong>PMT</strong> is your monthly contribution, <strong>i</strong> is the monthly return (your expected annual return ÷ 12), and <strong>N</strong> is the number of months until retirement (<strong>retirement age − current age, × 12</strong>). The <em>growth from returns</em> figure is simply your projected nest egg minus everything you actually put in.</p>
+
+    <h2>The 4% rule: turning a nest egg into income</h2>
+    <p>A balance is only useful if it can pay your bills. The widely-cited <strong>4% rule</strong> suggests you can withdraw about 4% of your portfolio in your first year of retirement and adjust for inflation after that, with a high chance of the money lasting roughly 30 years. The "Est. income (4% rule)" box turns your projected nest egg into an approximate monthly paycheck on that basis. Flip it around and you get the savings target: you need roughly <strong>25× your desired annual spending</strong>.</p>
+
+    <h3>Three levers that move your number the most</h3>
+    <ul>
+      <li><strong>Start earlier.</strong> Time is the most powerful input here — contributions made in your 20s have decades to compound. Try lowering your current age and watch the nest egg jump.</li>
+      <li><strong>Contribute more.</strong> Even an extra $100 a month, compounded over 30+ years, can add a surprising amount to the final balance.</li>
+      <li><strong>Mind the return.</strong> A single percentage point of return, sustained for decades, can change the outcome dramatically. Use a realistic, slightly conservative number rather than your best-case year.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How much money do I need to retire?</summary>
+      <p>A common starting point is the 4% rule: you need roughly <strong>25 times your desired annual spending</strong>. If you want $40,000 a year from your portfolio, that points to about a $1,000,000 nest egg. The calculator shows the flip side — an estimated safe monthly income equal to 4% of your projected balance.</p></details>
+    <details><summary>Does this include inflation and taxes?</summary>
+      <p>No. The result is a pre-inflation, pre-tax projection in today's dollars. To approximate an <strong>inflation-adjusted</strong> figure, enter a return that is about 2–3 points lower than your nominal expectation. Withdrawals from a traditional 401(k) or IRA are also generally taxable, which this estimate does not model.</p></details>
+    <details><summary>What expected return should I use?</summary>
+      <p>Historically a stock-heavy portfolio has averaged around <strong>7% a year before inflation</strong>, while a balanced stock-and-bond mix is often modeled at 5–6%. There are no guarantees, so choose a number you are comfortable with and compare a few scenarios.</p></details>
+    <details><summary>Why does starting early matter so much?</summary>
+      <p>Compounding rewards time. Money invested early earns returns, and those returns earn their own returns for decades. That is why a dollar saved in your 20s can be worth several times more at retirement than the same dollar saved later.</p></details>
+    <details><summary>Is this calculator free?</summary>
+      <p>Completely free, no sign-up, and your numbers never leave your browser — all the math runs on your device.</p></details>
+
+    <p class="note">This is a simplified projection for general information only and is not financial advice. It ignores inflation, taxes, fees, employer matches, and the year-to-year ups and downs of real markets. Returns are not guaranteed. Talk to a qualified financial planner about your own situation.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["currentAge","retireAge","savings","monthly","rate"];
+  function compute() {
+    var currentAge = MM.val("currentAge"), retireAge = MM.val("retireAge"),
+        savings = MM.val("savings"), monthly = MM.val("monthly"), rate = MM.val("rate");
+    if (!isFinite(currentAge)) currentAge = 0;
+    if (!isFinite(retireAge)) retireAge = 0;
+    if (!isFinite(savings)) savings = 0;
+    if (!isFinite(monthly)) monthly = 0;
+    if (!isFinite(rate)) rate = 0;
+
+    var years = Math.max(0, retireAge - currentAge);
+    var r = MM.compound(savings, monthly, rate, years, { periodsPerYear: 12 });
+
+    document.getElementById("nestegg").textContent = MM.fmtCurrency(r.futureValue, { cents: false });
+    document.getElementById("years").textContent = years > 0 ? (years + (years === 1 ? " year" : " years")) : "—";
+    document.getElementById("retireAt").textContent = (retireAge > 0 && years > 0) ? ("age " + Math.round(retireAge)) : "—";
+    document.getElementById("contributed").textContent = MM.fmtCurrency(r.totalContributions, { cents: false });
+    document.getElementById("growth").textContent = MM.fmtCurrency(r.totalInterest, { cents: false });
+    document.getElementById("starting").textContent = MM.fmtCurrency(savings, { cents: false });
+
+    var monthlyIncome = r.futureValue * 0.04 / 12;
+    document.getElementById("income").textContent = years > 0
+      ? (MM.fmtCurrency(monthlyIncome, { cents: false }) + " / mo")
+      : "—";
+
+    var spanEl = document.getElementById("span");
+    if (years > 0) spanEl.textContent = years + " years to grow";
+    else spanEl.textContent = "must be above current age";
+
+    var tb = document.querySelector("#sched tbody");
+    tb.innerHTML = "";
+    r.yearly.forEach(function (row) {
+      var tr = document.createElement("tr");
+      var age = Math.round(currentAge) + row.year;
+      tr.innerHTML = "<td>" + row.year + "</td><td>" + age +
+        "</td><td>" + MM.fmtCurrency(row.interestThisYear, { cents: false }) +
+        "</td><td>" + MM.fmtCurrency(row.balance, { cents: false }) + "</td>";
+      tb.appendChild(tr);
+    });
+  }
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>

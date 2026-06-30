@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compound Interest Calculator — Future Value | MoneyMath</title>
+<meta name="description" content="Free compound interest calculator. Enter an initial amount, monthly contribution, rate and years to see future value, total interest and yearly growth.">
+<link rel="canonical" href="https://moneymath.example/compound-interest-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Compound Interest Calculator — Future Value & Growth">
+<meta property="og:description" content="See how your savings grow. Enter an initial amount, monthly contribution, return rate and years for future value, interest earned and a year-by-year table.">
+<meta property="og:url" content="https://moneymath.example/compound-interest-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Compound Interest Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/compound-interest-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is compound interest?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Compound interest is interest earned on both your original principal and the interest already added to it. Because the interest itself starts earning interest, your balance grows faster the longer you stay invested — that snowball effect is what makes time the most powerful input." } },
+        { "@type": "Question", "name": "How does compounding frequency affect my return?",
+          "acceptedAnswer": { "@type": "Answer", "text": "More frequent compounding (monthly versus annually) credits interest to your balance sooner, so that interest also starts earning. The difference is small at low rates but grows with higher rates and longer time horizons. This calculator lets you switch between monthly, quarterly and annual compounding to compare." } },
+        { "@type": "Question", "name": "Does this calculator include regular contributions?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Enter a contribution amount and it is added every period — monthly by default, or once per quarter or per year if you change the compounding frequency. The future value, total contributions and total interest figures all include those ongoing deposits." } },
+        { "@type": "Question", "name": "What annual return rate should I use?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Use a realistic long-run estimate rather than a single good year. Historically a diversified stock-market portfolio has returned roughly 7% per year after inflation, while cash savings accounts earn far less. Lower the rate for a conservative projection and compare a few scenarios." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Compound Interest Calculator</h1>
+    <p class="lede">See how an initial investment plus regular contributions grows over time. This compound interest calculator shows your future value, total interest earned, and a year-by-year breakdown of how the balance builds.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="Compound interest calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="initial">Initial investment</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="initial" value="10000" min="0" step="100" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="monthly">Monthly contribution</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="monthly" value="500" min="0" step="50" inputmode="decimal"></div>
+        <span class="hint" id="contribhint"></span>
+      </div>
+      <div class="field">
+        <label for="rate">Annual return rate</label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="rate" value="7" min="0" step="0.1" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="years">Years</label>
+        <div class="input-wrap has-post"><span class="affix post">yrs</span>
+          <input type="number" id="years" value="20" min="0" max="100" step="1" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="freq">Compounding frequency</label>
+        <select id="freq">
+          <option value="12" selected>Monthly</option>
+          <option value="4">Quarterly</option>
+          <option value="1">Annually</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Future value</div>
+      <div class="big" id="fv">$0</div>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Initial investment</div><div class="v" id="initialOut">$0</div></div>
+        <div class="stat"><div class="k">Contributions added</div><div class="v" id="deposits">$0</div></div>
+        <div class="stat"><div class="k">Total interest earned</div><div class="v" id="interest">$0</div></div>
+        <div class="stat"><div class="k">Total invested</div><div class="v" id="invested">$0</div></div>
+        <div class="stat"><div class="k">Growth multiple</div><div class="v" id="multiple">—</div></div>
+        <div class="stat"><div class="k">Interest share of total</div><div class="v" id="intshare">—</div></div>
+      </div>
+    </div>
+
+    <details>
+      <summary>Show yearly growth (year-by-year)</summary>
+      <div class="table-wrap">
+        <table id="growth">
+          <thead><tr><th>Year</th><th>End balance</th><th>Interest that year</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this compound interest calculator works</h2>
+    <p>The future value of a starting balance plus equal contributions is found with the compound-growth formula:</p>
+    <p><code>FV = P(1 + i)<sup>N</sup> + PMT · ((1 + i)<sup>N</sup> − 1) / i</code></p>
+    <p>where <strong>P</strong> is your initial investment, <strong>PMT</strong> is the contribution each period, <strong>i</strong> is the periodic interest rate (your annual return rate ÷ the number of periods per year), and <strong>N</strong> is the total number of periods (years × periods per year). With <em>monthly</em> compounding that means 12 periods a year; <em>quarterly</em> uses 4 and <em>annually</em> uses 1. When the rate is 0%, the formula simplifies to your principal plus every contribution, with no interest.</p>
+
+    <h2>Why compounding is so powerful</h2>
+    <p>Compound interest means you earn returns on your returns. In the early years most of your balance growth comes from the money you put in. But as the interest builds, it begins to earn its own interest — and eventually that compounding can out-earn your contributions entirely. The longer your money stays invested, the more dramatic the effect, which is why starting early usually beats trying to catch up later with bigger deposits.</p>
+
+    <h3>The biggest levers on your final balance</h3>
+    <ul>
+      <li><strong>Time.</strong> Years in the market matter more than almost anything else — the curve bends upward late, so an extra five or ten years can dwarf a higher contribution.</li>
+      <li><strong>Contribution amount.</strong> Steady monthly deposits add fresh principal that then compounds. Use the field above to test what an extra $100 a month does.</li>
+      <li><strong>Return rate.</strong> A higher rate compounds faster, but be realistic — chasing returns usually means more risk. Compare a conservative and an optimistic rate side by side.</li>
+      <li><strong>Compounding frequency.</strong> More frequent compounding helps a little; its impact grows at higher rates and over longer periods.</li>
+    </ul>
+
+    <h2>How to read your results</h2>
+    <p>The big number is your projected <strong>future value</strong> — what the account could be worth at the end of the period. <strong>Total invested</strong> is everything you put in (your initial amount plus all contributions), and <strong>total interest earned</strong> is the growth on top of that. By design, total invested plus total interest equals the future value. The <strong>growth multiple</strong> shows how many times your money you end up with, and the yearly table reveals how the interest-per-year quietly overtakes your deposits.</p>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>What is compound interest?</summary>
+      <p>Compound interest is interest earned on both your original principal and the interest already added to it. Because the interest itself starts earning interest, your balance grows faster the longer you stay invested — that snowball effect is what makes time the most powerful input.</p></details>
+    <details><summary>How does compounding frequency affect my return?</summary>
+      <p>More frequent compounding (monthly versus annually) credits interest to your balance sooner, so that interest also starts earning. The difference is small at low rates but grows with higher rates and longer time horizons. Switch between monthly, quarterly and annual above to compare.</p></details>
+    <details><summary>Does this calculator include regular contributions?</summary>
+      <p>Yes. Enter a contribution amount and it is added every period — monthly by default, or once per quarter or per year if you change the compounding frequency. The future value, total contributions and total interest figures all include those ongoing deposits.</p></details>
+    <details><summary>What annual return rate should I use?</summary>
+      <p>Use a realistic long-run estimate rather than a single good year. Historically a diversified stock-market portfolio has returned roughly 7% per year after inflation, while cash savings accounts earn far less. Lower the rate for a conservative projection and compare a few scenarios.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Investment returns are not guaranteed and vary year to year; this tool assumes a constant rate and ignores taxes and fees. Confirm any plan with a qualified professional.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["initial", "monthly", "rate", "years", "freq"];
+  function periodWord(f) { return f === 1 ? "year" : f === 4 ? "quarter" : "month"; }
+
+  function compute() {
+    var initial = MM.val("initial"), monthly = MM.val("monthly"),
+        rate = MM.val("rate"), years = MM.val("years"), freq = MM.val("freq");
+    if (!isFinite(initial)) initial = 0;
+    if (!isFinite(monthly)) monthly = 0;
+    if (!isFinite(rate)) rate = 0;
+    if (!isFinite(years)) years = 0;
+    if (!isFinite(freq) || freq <= 0) freq = 12;
+
+    // periodsPerYear drives BOTH compounding and the contribution period (per calc.js).
+    var r = MM.compound(initial, monthly, rate, years, { periodsPerYear: freq });
+
+    var deposits = r.totalContributions - initial;            // contributions only (excl. initial)
+    var multiple = r.totalContributions > 0 ? (r.futureValue / r.totalContributions) : 0;
+    var intShare = r.futureValue > 0 ? (r.totalInterest / r.futureValue * 100) : 0;
+
+    document.getElementById("fv").textContent = MM.fmtCurrency(r.futureValue, { cents: false });
+    document.getElementById("initialOut").textContent = MM.fmtCurrency(initial, { cents: false });
+    document.getElementById("deposits").textContent = MM.fmtCurrency(deposits, { cents: false });
+    document.getElementById("interest").textContent = MM.fmtCurrency(r.totalInterest, { cents: false });
+    document.getElementById("invested").textContent = MM.fmtCurrency(r.totalContributions, { cents: false });
+    document.getElementById("multiple").textContent =
+      (isFinite(multiple) && multiple > 0) ? (multiple.toFixed(2) + "×") : "—";
+    document.getElementById("intshare").textContent =
+      (isFinite(intShare) && intShare > 0) ? MM.fmtPct(intShare, 0) : "—";
+
+    var pw = periodWord(freq);
+    var hint = document.getElementById("contribhint");
+    if (hint) hint.textContent = "added every " + pw + " (" + freq + "×/yr)";
+
+    var tb = document.querySelector("#growth tbody");
+    tb.innerHTML = "";
+    r.yearly.forEach(function (row) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + row.year + "</td><td>" + MM.fmtCurrency(row.balance, { cents: false }) +
+        "</td><td>" + MM.fmtCurrency(row.interestThisYear, { cents: false }) + "</td>";
+      tb.appendChild(tr);
+    });
+  }
+
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  // selects fire "change" reliably across browsers
+  var fsel = document.getElementById("freq");
+  if (fsel) fsel.addEventListener("change", compute);
+
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>

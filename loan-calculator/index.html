@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personal Loan Calculator — Monthly Payment | MoneyMath</title>
+<meta name="description" content="Free personal loan calculator: enter loan amount, APR and term to see your monthly payment, total interest, payoff time and full repayment schedule.">
+<link rel="canonical" href="https://moneymath.example/loan-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Personal Loan Calculator — Monthly Payment & Repayment">
+<meta property="og:description" content="Work out your personal loan monthly payment, total interest and payoff time — and see how much extra payments save. Free, no sign-up.">
+<meta property="og:url" content="https://moneymath.example/loan-calculator/">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Personal Loan Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://moneymath.example/loan-calculator/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How is a personal loan monthly payment calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Personal loans are fixed, fully-amortizing loans, so the payment uses M = P · r(1+r)^n / ((1+r)^n − 1), where P is the loan amount, r is the monthly interest rate (your APR ÷ 12), and n is the number of monthly payments (term in years × 12). Each payment covers that month's interest first, and the rest reduces the balance." } },
+        { "@type": "Question", "name": "What is a good interest rate (APR) for a personal loan?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Personal loan APRs typically range from about 7% for borrowers with excellent credit to 30%+ for lower credit scores. The rate is fixed for the life of the loan, so a lower APR or a shorter term both reduce the total interest you pay. Always compare the APR, not just the monthly payment, because a longer term can hide a higher total cost." } },
+        { "@type": "Question", "name": "Do extra payments pay off a personal loan faster?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Most personal loans have no prepayment penalty, so any extra amount you add each month goes straight to the principal. That shrinks the balance faster, which cuts both the number of payments and the total interest. Enter an extra monthly amount in the calculator to see the interest saved and time shaved off." } },
+        { "@type": "Question", "name": "Does this calculator include origination fees?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No — it calculates the payment, interest and payoff on the loan amount you enter. Many lenders deduct a 1%–8% origination fee from the funds you receive while still charging interest on the full loan amount, so the true cost (APR) can be higher than the quoted rate. Enter the full loan amount the lender charges interest on." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav">
+      <a href="/mortgage-calculator/">Mortgage</a>
+      <a href="/loan-calculator/">Loan</a>
+      <a href="/compound-interest-calculator/">Compound</a>
+      <a href="/retirement-calculator/">Retirement</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Personal Loan Calculator</h1>
+    <p class="lede">Estimate your monthly payment, total interest, and payoff time on a personal loan. Add an optional extra monthly payment to see how much interest and time you can save.</p>
+  </div>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <section class="calc" aria-label="Personal loan calculator">
+    <div class="grid">
+      <div class="field">
+        <label for="amount">Loan amount</label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="amount" value="15000" min="0" step="500" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="rate">Interest rate (APR)</label>
+        <div class="input-wrap has-post"><span class="affix post">%</span>
+          <input type="number" id="rate" value="11.5" min="0" step="0.1" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="term">Loan term</label>
+        <select id="term">
+          <option value="1">1 year</option>
+          <option value="2">2 years</option>
+          <option value="3" selected>3 years</option>
+          <option value="4">4 years</option>
+          <option value="5">5 years</option>
+          <option value="6">6 years</option>
+          <option value="7">7 years</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="extra">Extra monthly payment <span class="hint">(optional)</span></label>
+        <div class="input-wrap has-pre"><span class="affix pre">$</span>
+          <input type="number" id="extra" value="0" min="0" step="25" inputmode="decimal"></div>
+      </div>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="headline">Monthly payment</div>
+      <div class="big" id="monthly">$0</div>
+      <div class="hint" id="extranote"></div>
+      <div class="result-grid">
+        <div class="stat"><div class="k">Total interest</div><div class="v" id="interest">$0</div></div>
+        <div class="stat"><div class="k">Total of payments</div><div class="v" id="total">$0</div></div>
+        <div class="stat"><div class="k">Payoff time</div><div class="v" id="payoff">—</div></div>
+        <div class="stat"><div class="k">Number of payments</div><div class="v" id="npmts">—</div></div>
+        <div class="stat"><div class="k">Interest saved</div><div class="v" id="saved">$0</div></div>
+        <div class="stat"><div class="k">Time saved</div><div class="v" id="timesaved">—</div></div>
+      </div>
+    </div>
+
+    <details>
+      <summary>Show repayment schedule (yearly)</summary>
+      <div class="table-wrap">
+        <table id="sched">
+          <thead><tr><th>Year</th><th>Principal paid</th><th>Interest paid</th><th>Balance</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="ad-slot" data-slot=""></div>
+
+  <div class="content">
+    <h2>How this personal loan calculator works</h2>
+    <p>A personal loan is a <strong>fixed-rate, fully-amortizing</strong> loan: you borrow a lump sum and repay it in equal monthly installments. The payment is found with the standard amortizing-loan formula:</p>
+    <p><code>M = P · r(1 + r)<sup>n</sup> / ((1 + r)<sup>n</sup> − 1)</code></p>
+    <p>where <strong>P</strong> is the loan amount, <strong>r</strong> is the monthly interest rate (your APR ÷ 12), and <strong>n</strong> is the number of monthly payments (term in years × 12). Early on, most of each payment goes to interest; as the balance falls, more goes to principal. The yearly schedule above shows exactly how that split shifts over the life of the loan.</p>
+
+    <h2>What changes your monthly payment</h2>
+    <p>Three inputs drive everything, and they pull in different directions:</p>
+    <ul>
+      <li><strong>Loan amount.</strong> Borrow more and both the payment and the total interest rise in step.</li>
+      <li><strong>APR.</strong> The interest rate is fixed for the whole term, so even a couple of points changes the total cost meaningfully — shop the APR, not the monthly payment.</li>
+      <li><strong>Term.</strong> A longer term lowers the monthly payment but you make more payments, so you pay more interest overall. A shorter term costs more per month but far less in total.</li>
+    </ul>
+
+    <h3>How extra payments save you money</h3>
+    <p>Most personal loans carry <strong>no prepayment penalty</strong>, so every extra dollar you add goes straight to the principal. A smaller balance accrues less interest the very next month, which compounds into real savings. Enter an extra monthly amount above and the <em>Interest saved</em> and <em>Time saved</em> figures show exactly what it buys you — often a payoff that is months or even a year earlier.</p>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How is a personal loan monthly payment calculated?</summary>
+      <p>Personal loans are fixed, fully-amortizing loans, so the payment uses <code>M = P · r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> − 1)</code>. Each payment covers that month's interest first, and the remainder reduces your balance.</p></details>
+    <details><summary>What is a good interest rate (APR) for a personal loan?</summary>
+      <p>Rates typically run from about 7% for excellent credit to 30%+ for lower scores, and are fixed for the life of the loan. A lower APR or shorter term both cut total interest — compare the APR, not just the monthly payment, since a longer term can hide a higher total cost.</p></details>
+    <details><summary>Do extra payments pay off a personal loan faster?</summary>
+      <p>Yes. With no prepayment penalty, any extra amount goes straight to principal, shrinking the balance faster and cutting both the number of payments and the total interest. Enter an extra amount above to see the interest and time you save.</p></details>
+    <details><summary>Does this calculator include origination fees?</summary>
+      <p>No — it works from the loan amount you enter. Many lenders deduct a 1%–8% origination fee from the funds you receive while still charging interest on the full amount, so your real APR can be higher. Enter the full loan amount the lender charges interest on.</p></details>
+
+    <p class="note">Estimates are for general information only and are not financial advice. Your actual loan terms, APR, fees, and payment may differ. Confirm figures with your lender before borrowing.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/disclaimer/">Disclaimer</a>
+    </div>
+    <div>© <span id="yr"></span> MoneyMath. For information only — not financial advice.</div>
+  </div>
+</footer>
+
+<div id="cookie-bar">
+  <span>We use cookies for analytics and ads. <a href="/privacy/">Learn more</a>.</span>
+  <button type="button">Got it</button>
+</div>
+
+<script src="/assets/calc.js"></script>
+<script>
+(function () {
+  var ids = ["amount","rate","term","extra"];
+
+  function fmtMonths(m) {
+    m = Math.round(m || 0);
+    if (m <= 0) return "—";
+    var y = Math.floor(m / 12), mo = m % 12, parts = [];
+    if (y > 0) parts.push(y + " yr");
+    if (mo > 0) parts.push(mo + " mo");
+    return parts.join(" ");
+  }
+
+  function compute() {
+    var amount = MM.val("amount"), rate = MM.val("rate"),
+        term = MM.val("term"), extra = MM.val("extra");
+    if (!isFinite(amount)) amount = 0;
+    if (!isFinite(rate)) rate = 0;
+    if (!isFinite(term)) term = 0;
+    if (!isFinite(extra) || extra < 0) extra = 0;
+
+    var r = MM.amortize(amount, rate, term, { extraMonthly: extra });
+    var base = MM.amortize(amount, rate, term, {});  // no-extra baseline for savings
+
+    var interestSaved = Math.max(0, base.totalInterest - r.totalInterest);
+    var monthsSaved = Math.max(0, base.months - r.months);
+
+    document.getElementById("monthly").textContent = MM.fmtCurrency(r.monthlyPayment);
+    document.getElementById("interest").textContent = MM.fmtCurrency(r.totalInterest, { cents: false });
+    document.getElementById("total").textContent = MM.fmtCurrency(r.totalPaid, { cents: false });
+    document.getElementById("payoff").textContent = r.months ? fmtMonths(r.months) : "—";
+    document.getElementById("npmts").textContent = r.months ? (r.months + " payments") : "—";
+    document.getElementById("saved").textContent = MM.fmtCurrency(interestSaved, { cents: false });
+    document.getElementById("timesaved").textContent = monthsSaved > 0 ? fmtMonths(monthsSaved) : "—";
+
+    var note = document.getElementById("extranote");
+    if (extra > 0 && r.monthlyPayment > 0) {
+      note.textContent = "Plus " + MM.fmtCurrency(extra) + " extra = " +
+        MM.fmtCurrency(r.monthlyPayment + extra) + "/mo paid";
+    } else {
+      note.textContent = "";
+    }
+
+    var tb = document.querySelector("#sched tbody");
+    tb.innerHTML = "";
+    r.schedule.forEach(function (row) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + row.year + "</td><td>" + MM.fmtCurrency(row.principal, {cents:false}) +
+        "</td><td>" + MM.fmtCurrency(row.interest, {cents:false}) +
+        "</td><td>" + MM.fmtCurrency(row.balance, {cents:false}) + "</td>";
+      tb.appendChild(tr);
+    });
+  }
+
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", MM.debounce(compute, 80));
+  });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  compute();
+})();
+</script>
+</body>
+</html>
