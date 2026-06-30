@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mortgage Calculator — Monthly Payment & Amortization | MoneyMath</title>
-<meta name="description" content="Free mortgage calculator. Enter home price, down payment, rate and term to see your monthly payment, total interest, and a full year-by-year amortization schedule.">
+<title>Mortgage Calculator — Monthly Payment & Interest | MoneyMath</title>
+<meta name="description" content="Free mortgage calculator. Enter home price, down payment, rate and term to see your monthly payment, total interest, and a full amortization schedule.">
 <link rel="canonical" href="https://moneymath.example/mortgage-calculator/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Mortgage Calculator — Monthly Payment & Amortization">
@@ -26,12 +26,12 @@
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "How is a monthly mortgage payment calculated?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The principal and interest payment uses M = P · r(1+r)^n / ((1+r)^n − 1), where P is the loan amount, r is the monthly interest rate (annual rate ÷ 12), and n is the number of monthly payments (years × 12)." } },
-        { "@type": "Question", "name": "Does this mortgage calculator include taxes and insurance?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Enter your annual property tax and home insurance and the calculator adds them to your monthly principal-and-interest payment to estimate your full monthly housing cost (PITI)." } },
-        { "@type": "Question", "name": "How much does making extra payments save?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Adding an extra amount each month goes straight to principal, which shortens the loan and cuts total interest. Enter an extra monthly amount to see your new payoff time and interest saved." } }
+        { "@type": "Question", "name": "How is my monthly mortgage payment calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The principal-and-interest portion uses M = P · r(1+r)n / ((1+r)n − 1). We then add any monthly property tax and insurance you enter." } },
+        { "@type": "Question", "name": "Does this include property tax and insurance?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes — both are optional fields. Leave them at 0 for principal and interest only, or enter your annual amounts to see your full estimated monthly cost (PITI)." } },
+        { "@type": "Question", "name": "How much do extra payments save?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Extra payments reduce principal directly, so they cut both your payoff time and total interest. The result box updates the payoff time as soon as you enter an extra amount." } }
       ]
     }
   ]
@@ -196,7 +196,7 @@
     document.getElementById("monthly").textContent = MM.fmtCurrency(totalMonthly);
     document.getElementById("loan").textContent = MM.fmtCurrency(loan, { cents: false });
     document.getElementById("interest").textContent = MM.fmtCurrency(r.totalInterest, { cents: false });
-    document.getElementById("total").textContent = MM.fmtCurrency(r.totalPaid + (tax + ins) / 12 * r.months, { cents: false });
+    document.getElementById("total").textContent = MM.fmtCurrency(r.totalPaid + ((tax || 0) + (ins || 0)) / 12 * r.months, { cents: false });
     document.getElementById("pi").textContent = MM.fmtCurrency(pi);
     document.getElementById("ti").textContent = MM.fmtCurrency(monthlyTI);
     document.getElementById("payoff").textContent = r.months ? (r.payoffYears.toFixed(1) + " yrs") : "—";
