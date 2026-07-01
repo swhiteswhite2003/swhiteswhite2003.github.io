@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Traffic — MoneyMath (private)</title>
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+  .kpi { text-align:center; padding:26px 0 6px; }
+  .kpi .big { font-size:54px; font-weight:800; letter-spacing:-.02em; color:var(--brand-dark); line-height:1; }
+  .kpi .lbl { font-size:14px; color:var(--ink-soft); font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+  .muted { color:var(--ink-soft); font-size:13px; }
+  td.n, th.n { text-align:right; font-variant-numeric:tabular-nums; }
+  #err { color:var(--warn); }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">●</span> MoneyMath</a>
+    <nav class="nav"><a href="/">← Back to site</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Traffic dashboard</h1>
+    <p class="lede">Live, anonymous pageview counts for your calculator site. Private — this page isn't indexed or linked anywhere.</p>
+  </div>
+
+  <div class="result">
+    <div class="kpi">
+      <div class="big" id="total">…</div>
+      <div class="lbl">Total pageviews</div>
+    </div>
+    <p class="muted" style="text-align:center;margin:10px 0 0" id="status">Loading…</p>
+  </div>
+
+  <div class="table-wrap" style="margin-top:20px">
+    <table>
+      <thead><tr><th>Page</th><th class="n">Views</th></tr></thead>
+      <tbody id="rows"><tr><td>Loading…</td><td class="n"></td></tr></tbody>
+    </table>
+  </div>
+
+  <p id="err"></p>
+  <div style="margin:16px 0"><button class="btn" id="refresh">Refresh</button></div>
+
+  <div class="content">
+    <p class="muted">Counts are anonymous and cookieless (via the free <a href="https://jasoncameron.dev/abacus/" rel="nofollow noopener" target="_blank">Abacus</a> counter). They include some bot/crawler traffic, so treat them as a directional signal, not precise humans. For richer data (where visitors come from, real-time, referrers, bot-filtered), add Google Analytics — see <code>GO_LIVE.md</code>.</p>
+  </div>
+</main>
+
+<script>
+(function () {
+  var NS = "mm-eli23z7j7n";
+  var GET = "https://abacus.jasoncameron.dev/get/" + encodeURIComponent(NS) + "/";
+  // page key -> display name (mirrors the site structure)
+  var PAGES = [
+    ["home", "🏠 Home"],
+    ["mortgage-calculator", "Mortgage"],
+    ["loan-calculator", "Personal loan"],
+    ["auto-loan-calculator", "Auto loan"],
+    ["compound-interest-calculator", "Compound interest"],
+    ["retirement-calculator", "Retirement"],
+    ["debt-payoff-calculator", "Debt payoff"],
+    ["savings-goal-calculator", "Savings goal"],
+    ["401k-calculator", "401(k)"],
+    ["credit-card-payoff-calculator", "Credit-card payoff"],
+    ["roi-calculator", "ROI"],
+    ["simple-interest-calculator", "Simple interest"],
+    ["cd-calculator", "CD"]
+  ];
+
+  function read(key) {
+    return fetch(GET + encodeURIComponent(key), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : { value: 0 }; })
+      .then(function (j) { return (j && typeof j.value === "number") ? j.value : 0; })
+      .catch(function () { return 0; });
+  }
+
+  function fmt(n) { try { return new Intl.NumberFormat("en-US").format(n); } catch (e) { return "" + n; } }
+
+  function load() {
+    document.getElementById("status").textContent = "Loading…";
+    document.getElementById("err").textContent = "";
+    var jobs = [read("total")].concat(PAGES.map(function (p) { return read(p[0]); }));
+    Promise.all(jobs).then(function (vals) {
+      var total = vals[0];
+      document.getElementById("total").textContent = fmt(total);
+      var rows = PAGES.map(function (p, i) { return { name: p[1], v: vals[i + 1] }; })
+                      .sort(function (a, b) { return b.v - a.v; });
+      var sumPages = rows.reduce(function (s, r) { return s + r.v; }, 0);
+      var tb = document.getElementById("rows");
+      tb.innerHTML = "";
+      rows.forEach(function (r) {
+        var tr = document.createElement("tr");
+        tr.innerHTML = "<td>" + r.name + "</td><td class='n'>" + fmt(r.v) + "</td>";
+        tb.appendChild(tr);
+      });
+      var d = new Date();
+      var extra = (total > sumPages) ? (" · " + fmt(total - sumPages) + " on other/legal pages") : "";
+      document.getElementById("status").textContent =
+        (total === 0 ? "No visits recorded yet — the counter is live and will fill in as people arrive."
+                     : "Live" + extra) + " · updated " + d.toLocaleTimeString();
+    }).catch(function (e) {
+      document.getElementById("err").textContent = "Could not load counts: " + e.message;
+    });
+  }
+
+  document.getElementById("refresh").addEventListener("click", load);
+  load();
+})();
+</script>
+</body>
+</html>

@@ -13,6 +13,7 @@
     domain: "swhiteswhite2003.github.io",            // <- replace with your real domain
     adsensePublisherId: "",                  // <- "ca-pub-XXXXXXXXXXXXXXXX" after AdSense approval
     ga4Id: "",                               // <- "G-XXXXXXXXXX" for Google Analytics (optional)
+    analyticsNamespace: "mm-eli23z7j7n",     // free Abacus hit counter (no account); view at /stats/
     defaultCurrency: "USD",
     defaultLocale: "en-US"
   };
@@ -343,6 +344,27 @@
     }
   }
 
+  /* Anonymous, cookieless pageview counter via Abacus (free, no account, no PII).
+     Just increments a number per page + a site-wide total. Skips localhost/file so
+     dev + tests never inflate real numbers. Read the totals at /stats/. */
+  function initCounter() {
+    if (!CONFIG.analyticsNamespace) return;
+    var h = location.hostname;
+    if (!h || h === "localhost" || h === "127.0.0.1" || location.protocol === "file:") return;
+    var ua = (navigator && navigator.userAgent) || "";
+    if (/bot|crawl|spider|slurp|jsdom|headless|phantom|lighthouse|preview|monitor/i.test(ua)) return; // count humans, not bots/tests
+    var ns = encodeURIComponent(CONFIG.analyticsNamespace);
+    var page = location.pathname.replace(/index\.html$/, "").replace(/^\/+|\/+$/g, "");
+    page = (page || "home").replace(/[^a-z0-9\-]/gi, "-").toLowerCase().slice(0, 40);
+    if (page === "stats") return; // don't count the stats dashboard itself
+    var base = "https://abacus.jasoncameron.dev/hit/" + ns + "/";
+    function ping(key) {
+      try { fetch(base + encodeURIComponent(key), { method: "GET", mode: "no-cors", keepalive: true }); } catch (e) {}
+    }
+    ping("total");
+    ping(page);
+  }
+
   function initCookieBar() {
     try {
       if (localStorage.getItem("mm_cookie_ok")) return;
@@ -360,6 +382,7 @@
   if (typeof document !== "undefined") {
     document.addEventListener("DOMContentLoaded", function () {
       initMonetization();
+      initCounter();
       initCookieBar();
     });
   }
